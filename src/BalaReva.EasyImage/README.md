@@ -15,4 +15,10 @@ binding surface exposes `System.Drawing` types directly — `ImageRotate.FlipTyp
 Activities: `ImageSizes`, `ImageResize`, `ImageCropper`, `ImageRotate`,
 `ImageConverter`, `ImageCompression`, `ImageCombine`, `ImageMerge`, `ImageWatermark`.
 
+Note that `ImageWatermark`'s `Font` and `ImageFormat` must be bound as expressions, not
+as design-time constants: WF literals only accept value types and `String`, and both of
+those are reference types. `ForeColor` and `TextPosition` are structs and bind normally.
+Leaving any of them unset is fine — the defaults are 24pt bold Arial, semi-transparent
+white, and the source image's own format.
+
 See [docs/REVIVAL.md](https://github.com/Mo3bdlaa/BalaReva.Revived.Activities/blob/main/docs/REVIVAL.md).

@@ -120,6 +120,23 @@ it is a larger change than a retarget and will not always be behaviour-identical
   error: pause, resume and purge open the queue with `AdministratePrinter`, and reading
   the queue uses `UsePrinter`.
 
+### `ImageWatermark`'s Font and ImageFormat cannot be literals
+
+This is inherited from the original's argument types rather than introduced here, but
+it will bite anyone wiring the activity up, so it is worth stating plainly.
+
+WF's `Literal<T>` accepts only value types and `String`. `ImageWatermark.Font` and
+`ImageWatermark.ImageFormat` are `InArgument<Font>` and `InArgument<ImageFormat>`, both
+reference types, so a literal binding is rejected at validation time with:
+
+> `Literal only supports value types and the immutable type System.String.`
+
+They have to be bound as expressions instead — in Studio that means a VB or C#
+expression such as `New Font("Arial", 24)` rather than a design-time constant. The
+other two `System.Drawing` arguments, `ForeColor` and `TextPosition`, are structs and
+bind as literals without trouble. Leaving both unset is also fine: the activity falls
+back to 24pt bold Arial, semi-transparent white, and the source image's own format.
+
 ## Behaviour that the metadata could not settle
 
 Type and property names come from the assemblies and are certain. Semantics do not,

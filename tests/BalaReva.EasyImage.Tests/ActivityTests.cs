@@ -253,11 +253,34 @@ public class ActivityTests
             SourceFilePath = new InArgument<string>(source),
             DestinationFolder = new InArgument<string>(images.Folder),
             Text = new InArgument<string>("X"),
-            ImageFormat = new InArgument<ImageFormat>(ImageFormat.Jpeg),
+            // Not new InArgument<ImageFormat>(ImageFormat.Jpeg): that builds a
+            // Literal<ImageFormat>, and WF literals only accept value types and string.
+            // A real workflow has to bind this as an expression too. Same for Font.
+            ImageFormat = new InArgument<ImageFormat>(_ => ImageFormat.Jpeg),
         });
 
         var written = (string)outputs["OutputFile"];
         Assert.EndsWith(".jpg", written, StringComparison.Ordinal);
         Assert.Equal(ImageFormat.Jpeg.Guid, TestImages.FormatOf(written).Guid);
+    }
+
+    [Fact]
+    public void ImageWatermark_accepts_a_font_supplied_by_the_workflow()
+    {
+        using var images = new TestImages();
+        var source = images.Create("photo.png", 300, 120);
+        using var font = new Font("Arial", 18, FontStyle.Italic);
+
+        var outputs = TestImages.Run(new ImageWatermark
+        {
+            SourceFilePath = new InArgument<string>(source),
+            DestinationFolder = new InArgument<string>(images.Folder),
+            Text = new InArgument<string>("DRAFT"),
+            Font = new InArgument<Font>(_ => font),
+        });
+
+        Assert.True(File.Exists((string)outputs["OutputFile"]));
+        // The activity must not dispose a font it did not create; this would throw if it had.
+        Assert.Equal(18, font.Size);
     }
 }
