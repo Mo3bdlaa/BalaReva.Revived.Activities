@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Windows-bound by the binding surface: BalaReva.Outlook.EmailItem exposes a
+         Microsoft.Office.Interop.Outlook.MailItem, so the COM type is part of the
+         public API and cannot be swapped for anything portable. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>BalaReva.EasyOutlook</RootNamespace>
+    <AssemblyName>BalaReva.EasyOutlook</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.EasyOutlook.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Easy Outlook Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      Outlook activities for UiPath, reimplemented on .NET 8. Type and property names
+      match BalaReva.EasyOutlook.Activities 3.0.0 so existing workflows keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <!-- Declared as a dependency rather than vendored. The published package shipped
+         Microsoft.Office.Interop.Outlook.dll, Word's interop and office.dll as loose
+         files in lib/, which no manifest-based scanner can see - exactly the blind
+         spot the audit calls out. This package has a netstandard2.0 asset, so it
+         restores cleanly on .NET 8. -->
+    <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
+  </ItemGroup>
+
+</Project>

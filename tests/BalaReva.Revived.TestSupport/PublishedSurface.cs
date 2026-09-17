@@ -71,21 +71,46 @@ public static class PublishedSurface
         }
     }
 
-    /// <summary>Renders a recorded signature string as "Outer&lt;Inner&gt;".</summary>
+    /// <summary>
+    /// Renders a recorded signature string as "Outer&lt;Inner&gt;", recursing so that
+    /// a nested generic such as InArgument&lt;List&lt;string&gt;&gt; renders in full.
+    /// </summary>
     private static string Normalize(string recorded)
     {
         var open = recorded.IndexOf('<');
         if (open < 0) return Leaf(recorded);
         var outer = Leaf(recorded[..open]);
-        return $"{outer}<{Leaf(recorded[(open + 1)..recorded.LastIndexOf('>')])}>";
+        var inner = recorded[(open + 1)..recorded.LastIndexOf('>')];
+        return $"{outer}<{string.Join(", ", SplitArguments(inner).Select(Normalize))}>";
     }
 
     /// <summary>Renders a runtime type the same way <see cref="Normalize"/> renders a recorded one.</summary>
     private static string Describe(Type type)
     {
+        if (type.IsArray) return Describe(type.GetElementType()!) + "[]";
         if (!type.IsGenericType) return Leaf(type.Name);
         var outer = type.Name[..type.Name.IndexOf('`')];
-        return $"{outer}<{Leaf(type.GetGenericArguments()[0].Name)}>";
+        return $"{outer}<{string.Join(", ", type.GetGenericArguments().Select(Describe))}>";
+    }
+
+    /// <summary>Splits generic arguments on commas that are not inside a nested pair.</summary>
+    private static List<string> SplitArguments(string inner)
+    {
+        var parts = new List<string>();
+        var depth = 0;
+        var start = 0;
+        for (var i = 0; i < inner.Length; i++)
+        {
+            if (inner[i] == '<') depth++;
+            else if (inner[i] == '>') depth--;
+            else if (inner[i] == ',' && depth == 0)
+            {
+                parts.Add(inner[start..i].Trim());
+                start = i + 1;
+            }
+        }
+        parts.Add(inner[start..].Trim());
+        return parts;
     }
 
     /// <summary>Strips namespaces and maps C# keywords onto their CLR type names.</summary>
@@ -98,6 +123,8 @@ public static class PublishedSurface
             name = name[..^2];
         }
         name = name[(name.LastIndexOf('.') + 1)..];
+        var arity = name.IndexOf('`');
+        if (arity >= 0) name = name[..arity];
         return (name switch
         {
             "bool" => "Boolean",

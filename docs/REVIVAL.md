@@ -31,7 +31,7 @@ support on 2024-11-12. Between them they hold **262 concrete activities**:
 | `BalaReva.EasyText.Activities` | 12 | `net8.0` | ✅ Reimplemented |
 | `BalaReva.EasyImage.Activities` | 9 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Printer.Activities` | 10 | `net8.0-windows` | ✅ Reimplemented |
-| `BalaReva.EasyOutlook.Activities` | 20 | — | Not started |
+| `BalaReva.EasyOutlook.Activities` | 20 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Excel.Activities` | 39 | — | Not started |
 | `BalaReva.Word.Activities` | 39 | — | Not started |
 | `BalaReva.EasyPowerPoint.Activities` | 56 | — | Not started |
@@ -41,7 +41,7 @@ EasyText went first because it is the only one of the eight with no Windows
 dependency at all, which means its behaviour can be executed and asserted on any
 agent rather than merely compiled.
 
-### Why EasyImage and Printer have to stay on Windows
+### Why EasyImage, Printer and EasyOutlook have to stay on Windows
 
 EasyText could be moved to plain `net8.0` because nothing in it needed Windows. That
 is not a choice available for these two, and the reason is the binding surface itself:
@@ -56,6 +56,11 @@ is not a choice available for these two, and the reason is the binding surface i
   members one for one, and `AccessRightsEnum`, whose values are `PrintSystemDesiredAccess`
   exactly — `AdministratePrinter` is 983052 in both. That is WPF's printing stack, which
   ships only in the Windows Desktop runtime.
+- **EasyOutlook** hands back a live `Microsoft.Office.Interop.Outlook.MailItem` through
+  `BalaReva.Outlook.EmailItem`, so the COM type is part of the public API. Its three
+  enums are Outlook's own numbers too: `MailFolderEnum` is `OlDefaultFolders` (hence the
+  non-consecutive 3, 4, 5, 6, 16, 23), `BusyStatusEnum` is `OlBusyStatus` and
+  `ImportanceEnum` is `OlImportance`.
 
 Both therefore target `net8.0-windows`. They are supported again, and usable from a
 Studio *Windows* project, but they cannot be used from a *Cross-platform* project — and
@@ -69,13 +74,21 @@ does not exist on Linux. So CI has two jobs. The Linux job builds everything (wh
 works, via `EnableWindowsTargeting`) and runs the EasyText suite. The Windows job runs
 all three suites.
 
-Printer talks to the spooler through `IPrinterService`, and its tests register a
-stand-in as a workflow extension. That is not only for portability: pausing a queue or
+Printer talks to the spooler through `IPrinterService`, and EasyOutlook talks to the
+mailbox through `IOutlookService`; both register a stand-in as a workflow extension in
+their tests. That is not only for portability: pausing a queue or
 purging jobs on a build agent is destructive, and an agent may have no printers at all.
 Everything worth testing — argument validation, which call is made with which
 arguments, `ContinueOnError`, output mapping — sits on this side of that boundary. The
 Windows implementation behind it is a thin translation, and is the part that a real
 machine has to vouch for.
+
+**EasyOutlook is the sharpest case of this and deserves stating plainly: no CI agent
+has Outlook installed, so `OutlookService` — the entire COM half of that package — is
+not covered by any automated test.** It compiles, and the activity layer above it is
+well covered, but its behaviour against a real mailbox is unverified. The same will be
+true of the Office-bound packages still to come, and it is why the COM layer is kept to
+a mechanical translation with every judgement pushed up into the activities.
 
 ### A note on the Office-bound packages
 
@@ -176,3 +189,25 @@ For EasyImage and Printer:
 - **`PrinterCommand` acts on the default printer**, since it has no printer name
   argument. The named-printer operations are the separate Pause, Resume and Clear
   activities.
+
+For EasyOutlook:
+
+- **`GetFolders` lists the folders directly under the mailbox root**, and
+  `CreateFolder`, `DeleteFolder` and `RenameFolder` act at that same level. The
+  published names say "folder" and "sub folder" without saying what either is relative
+  to, so this is the reading that makes the pair consistent.
+- **"Empty" means no items and no sub folders**, and the sweep is one level deep, so a
+  folder whose only child is itself empty survives `DeleteEmptyFolders`.
+- **The SharePoint activities look for a store named "SharePoint Lists".** That is what
+  an English Outlook calls it; on a localised install the name differs and the activity
+  will report that no such store exists. Worth revisiting if anyone hits it.
+- **`ExecuteMacro` goes through late binding.** Outlook's object model, unlike Excel's
+  and Word's, has no documented `Application.Run`, so there is no clean way to do this
+  and no way to verify it here. If it fails, the COM error is surfaced rather than
+  swallowed.
+- **A meeting sends, an appointment saves.** `NewAppointment` writes to the calendar;
+  `NewMeeting` sends invitations as soon as it runs.
+- **`ReminderMinutes` of zero or less means no reminder** rather than "remind at the
+  start", since setting the minutes without also setting `ReminderSet` does nothing.
+- **An all-day event ignores the times**, so its end may precede its start on the clock
+  without being rejected.

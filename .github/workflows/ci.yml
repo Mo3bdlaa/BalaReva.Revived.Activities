@@ -31,6 +31,7 @@ jobs:
           dotnet pack src/BalaReva.EasyText/BalaReva.EasyText.csproj -c Release --no-build -o artifacts
           dotnet pack src/BalaReva.EasyImage/BalaReva.EasyImage.csproj -c Release --no-build -o artifacts
           dotnet pack src/BalaReva.Printer/BalaReva.Printer.csproj   -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.EasyOutlook/BalaReva.EasyOutlook.csproj -c Release --no-build -o artifacts
 
       # The audit found a published package shipping a .NET Framework assembly out of
       # a net6.0-windows folder. This makes sure we never ship that shape ourselves.
@@ -43,8 +44,9 @@ jobs:
           path: artifacts/*.nupkg
 
   # The Windows-only packages are only really tested here. EasyImage exercises real
-  # GDI+ on real files; Printer runs its activities against a stand-in spooler, since
-  # pausing or purging a queue on a build agent is not something to do for real.
+  # GDI+ on real files; Printer and EasyOutlook run their activities against stand-ins,
+  # since purging a print queue on a build agent is not something to do for real and no
+  # agent has Outlook installed at all.
   windows:
     runs-on: windows-latest
     steps:

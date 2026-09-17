@@ -84,25 +84,29 @@ of support. Between them they hold **262 concrete activities**:
 | `BalaReva.EasyText.Activities` | 12 | `net8.0` | ✅ Reimplemented |
 | `BalaReva.EasyImage.Activities` | 9 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Printer.Activities` | 10 | `net8.0-windows` | ✅ Reimplemented |
-| `BalaReva.EasyOutlook.Activities` | 20 | — | Not started |
+| `BalaReva.EasyOutlook.Activities` | 20 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Excel.Activities` | 39 | — | Not started |
 | `BalaReva.Word.Activities` | 39 | — | Not started |
 | `BalaReva.EasyPowerPoint.Activities` | 56 | — | Not started |
 | `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
 
 EasyText moved to plain `net8.0`, so it now works in Cross-platform projects too —
-something the original could not do. EasyImage and Printer cannot follow it, and not
-for want of effort: their **binding surfaces are made of Windows types**. EasyImage
-takes a `Font`, a `Color`, a `Point` and a `RotateFlipType` as arguments; Printer's
-`PrinterStatus` is `System.Printing.PrintQueue` member for member, and its
-`AccessRightsEnum` values are `PrintSystemDesiredAccess` exactly. Substituting a
-portable library would break the very workflows these packages exist to keep working,
-so both target `net8.0-windows`.
+something the original could not do. The other three cannot follow it, and not for want
+of effort: their **binding surfaces are made of Windows types**. EasyImage takes a
+`Font`, a `Color`, a `Point` and a `RotateFlipType` as arguments; Printer's
+`PrinterStatus` is `System.Printing.PrintQueue` member for member; EasyOutlook hands
+back a live `Microsoft.Office.Interop.Outlook.MailItem`. Substituting a portable library
+would break the very workflows these packages exist to keep working, so all three target
+`net8.0-windows`.
+
+EasyOutlook also carries a caveat worth reading before trusting it: **no build agent has
+Outlook installed, so its COM layer is not covered by any automated test.** The activity
+layer above it is, through a stand-in session.
 
 That splits CI in two. Everything builds on Linux via `EnableWindowsTargeting`, but
 `System.Drawing` throws there and a `net8.0-windows` test host needs a runtime Linux
 does not have — so the Linux job runs the EasyText suite and the Windows job runs all
-three.
+four.
 
 [docs/REVIVAL.md](docs/REVIVAL.md) covers the approach, and records the behavioural
 decisions that metadata could not settle — line numbering chief among them.
