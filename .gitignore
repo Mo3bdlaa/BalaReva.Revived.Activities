@@ -11,3 +11,6 @@ obj/
 # dotnet tool output
 tools/**/bin/
 tools/**/obj/
+
+# packed output
+artifacts/

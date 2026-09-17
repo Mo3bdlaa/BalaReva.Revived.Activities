@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore BalaReva.Revived.sln
+
+      - name: Build
+        run: dotnet build BalaReva.Revived.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test BalaReva.Revived.sln -c Release --no-build --verbosity normal
+
+      - name: Pack
+        run: dotnet pack src/BalaReva.EasyText/BalaReva.EasyText.csproj -c Release --no-build -o artifacts
+
+      # The audit found a published package shipping a .NET Framework assembly out of
+      # a net6.0-windows folder. This makes sure we never ship that shape ourselves.
+      - name: Verify package layout
+        run: python3 audit/verify_package_layout.py 'artifacts/*.nupkg'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/*.nupkg

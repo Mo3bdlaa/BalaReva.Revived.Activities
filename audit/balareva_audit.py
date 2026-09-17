@@ -420,6 +420,32 @@ def render(report):
     return "\n".join(L) + "\n"
 
 
+def _undated(text):
+    """Drops the generation date so a rerun on a later day compares equal."""
+    return "\n".join(line for line in text.splitlines()
+                     if not line.startswith("Generated ") and '"generated"' not in line)
+
+
+def check(report, json_path, markdown_path):
+    """Compares freshly built output against what is committed. Returns an exit code."""
+    stale = []
+    for path, produced in ((json_path, json.dumps(report, indent=1, sort_keys=True)),
+                           (markdown_path, render(report))):
+        if not os.path.exists(path):
+            stale.append(f"{path} is missing")
+        elif _undated(open(path).read()) != _undated(produced):
+            stale.append(f"{path} is out of date")
+
+    if not stale:
+        print("Audit outputs are current.", file=sys.stderr)
+        return 0
+
+    for item in stale:
+        print(f"STALE: {item}", file=sys.stderr)
+    print("\nRe-run 'python3 audit/balareva_audit.py' and commit the result.", file=sys.stderr)
+    return 1
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -428,6 +454,10 @@ def main():
     ap.add_argument("--markdown", default=os.path.join(REPO, "docs", "AUDIT.md"))
     ap.add_argument("--offline", action="store_true",
                     help="fail rather than hit the network for anything not cached")
+    ap.add_argument("--check", action="store_true",
+                    help="exit non-zero if the committed outputs are out of date, and "
+                         "write nothing. The generation date is ignored, so this only "
+                         "trips on a real change: a new release, or a new advisory.")
     args = ap.parse_args()
 
     if args.offline:
@@ -438,6 +468,9 @@ def main():
     print("Auditing BalaReva packages...", file=sys.stderr)
     report = build(args.cache, args.offline)
 
+    if args.check:
+        return check(report, args.json, args.markdown)
+
     os.makedirs(os.path.dirname(args.json), exist_ok=True)
     with open(args.json, "w") as fh:
         json.dump(report, fh, indent=1, sort_keys=True)
@@ -445,7 +478,8 @@ def main():
     with open(args.markdown, "w") as fh:
         fh.write(render(report))
     print(f"\nWrote {args.json}\nWrote {args.markdown}", file=sys.stderr)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

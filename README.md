@@ -64,9 +64,51 @@ python3 audit/balareva_audit.py --offline    # rebuild the report from the local
 Outputs are `docs/AUDIT.md` (readable) and `audit/data/audit.json` (machine-readable,
 committed so changes between runs show up in a diff).
 
-## Scope
+## Reviving them
 
-The published BalaReva packages are closed-source; this repository does not decompile or
-redistribute them. Reviving an activity here means reimplementing it against a supported
-runtime and current dependencies, keeping the activity and property names compatible so
-existing workflows keep binding.
+The published packages are closed-source, so reviving one means reimplementing it
+against a supported runtime rather than retargeting a fork. What gets preserved is the
+binding surface: a `.xaml` workflow refers to an activity by type full name and to its
+inputs and outputs by property name, so those have to survive the swap exactly.
+
+`tools/ApiSurface` records the published surface from the assemblies' metadata tables —
+names and signatures only, never method bodies — and the reimplementation is checked
+back against that recording on every build. Rename a property and the build fails
+instead of someone's workflow.
+
+The current pass targets the eight packages that ship .NET 6 assets, since .NET 6 is out
+of support. Between them they hold **262 concrete activities**:
+
+| Package | Activities | Status |
+|---|---:|---|
+| `BalaReva.EasyText.Activities` | 12 | ✅ Reimplemented on .NET 8 |
+| `BalaReva.EasyImage.Activities` | 9 | Not started |
+| `BalaReva.Printer.Activities` | 10 | Not started |
+| `BalaReva.EasyOutlook.Activities` | 20 | Not started |
+| `BalaReva.Excel.Activities` | 39 | Not started |
+| `BalaReva.Word.Activities` | 39 | Not started |
+| `BalaReva.EasyPowerPoint.Activities` | 56 | Not started |
+| `BalaReva.EasyExcel.Activities` | 77 | Not started |
+
+EasyText went first because it is the only one of the eight with no Windows dependency,
+so its behaviour can be executed and asserted in CI rather than merely compiled. It now
+targets plain `net8.0`, which means it works in Cross-platform projects too — something
+the original could not do. The rest lean on Office COM interop, `System.Drawing` or the
+print spooler and will need a Windows runner to be tested honestly.
+
+[docs/REVIVAL.md](docs/REVIVAL.md) covers the approach, and records the behavioural
+decisions that metadata could not settle — line numbering chief among them.
+
+## Building
+
+```
+dotnet build BalaReva.Revived.sln -c Release
+dotnet test  BalaReva.Revived.sln -c Release
+dotnet pack  src/BalaReva.EasyText/BalaReva.EasyText.csproj -c Release -o artifacts
+python3 audit/verify_package_layout.py 'artifacts/*.nupkg'
+```
+
+That last step is the audit's own PE reader pointed at our output: it fails a package
+whose `lib/<tfm>/` folder disagrees with what its assemblies target, which is exactly
+the defect found in `BalaReva.EasyDataTable.Activities` 5.0.0. CI runs it on every
+build.

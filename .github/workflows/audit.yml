@@ -1,0 +1,25 @@
+name: Audit
+
+# The audit queries the UiPath gallery, nuget.org and osv.dev, so it is not run per
+# push: a new advisory published upstream would turn an unrelated pull request red,
+# and the job would be at the mercy of three external services. Weekly is the right
+# cadence for "has anything rotted further", and it can always be kicked off by hand.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Fails when a new BalaReva release or a new advisory changes the findings.
+      # The generation date alone does not count as a change.
+      - name: Check the committed audit against the live feeds
+        run: python3 audit/balareva_audit.py --check

@@ -123,6 +123,36 @@ public static class Program
             if (name.StartsWith('<')) continue; // compiler-generated
 
             var baseType = ResolveTypeName(md, type.BaseType);
+
+            // Enum members are part of the binding contract: a workflow persists the
+            // member name, so renaming or reordering one breaks it on upgrade.
+            var enumMembers = new List<EnumMember>();
+            if (baseType == "System.Enum")
+            {
+                foreach (var fieldHandle in type.GetFields())
+                {
+                    var field = md.GetFieldDefinition(fieldHandle);
+                    if ((field.Attributes & FieldAttributes.Static) == 0) continue;
+                    var constHandle = field.GetDefaultValue();
+                    object? value = null;
+                    if (!constHandle.IsNil)
+                    {
+                        var constant = md.GetConstant(constHandle);
+                        var reader = md.GetBlobReader(constant.Value);
+                        value = constant.TypeCode switch
+                        {
+                            ConstantTypeCode.Int32 => reader.ReadInt32(),
+                            ConstantTypeCode.Int16 => reader.ReadInt16(),
+                            ConstantTypeCode.Byte => reader.ReadByte(),
+                            ConstantTypeCode.SByte => reader.ReadSByte(),
+                            ConstantTypeCode.Int64 => reader.ReadInt64(),
+                            _ => null,
+                        };
+                    }
+                    enumMembers.Add(new EnumMember(md.GetString(field.Name), value));
+                }
+            }
+
             var properties = new List<PropertySurface>();
             foreach (var propHandle in type.GetProperties())
             {
@@ -146,7 +176,8 @@ public static class Program
                 (attrs & TypeAttributes.Abstract) != 0,
                 DerivesFromActivity(baseType, baseOf),
                 properties.OrderBy(p => p.Name).ToList(),
-                AttributeNames(md, type.GetCustomAttributes())));
+                AttributeNames(md, type.GetCustomAttributes()),
+                enumMembers));
         }
 
         return result;
@@ -310,8 +341,11 @@ internal sealed class SignatureNames : ISignatureTypeProvider<string, object?>
 internal record PropertySurface(
     string Name, string Type, bool? PublicGetter, bool? PublicSetter, List<string> Attributes);
 
+internal record EnumMember(string Name, object? Value);
+
 internal record TypeSurface(
     string Assembly, string FullName, string Namespace, string Name, string? BaseType,
-    bool IsAbstract, bool IsActivity, List<PropertySurface> Properties, List<string> Attributes);
+    bool IsAbstract, bool IsActivity, List<PropertySurface> Properties, List<string> Attributes,
+    List<EnumMember> EnumMembers);
 
 internal record PackageSurface(string Id, List<TypeSurface> Types, List<TypeSurface> Activities);

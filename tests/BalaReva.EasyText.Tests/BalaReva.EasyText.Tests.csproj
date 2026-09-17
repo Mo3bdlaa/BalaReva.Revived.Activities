@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <!-- Test methods document themselves by name; XML doc warnings here are noise. -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RootNamespace>BalaReva.EasyText.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The recorded surface of the published package, produced by tools/ApiSurface.
+         ApiCompatibilityTests checks the reimplementation against it. -->
+    <Content Include="../../audit/data/api-surface.json" Link="api-surface.json"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/BalaReva.EasyText/BalaReva.EasyText.csproj" />
+  </ItemGroup>
+
+</Project>

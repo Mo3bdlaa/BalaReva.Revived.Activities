@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>BalaReva.Revived.Tools.ApiSurface</RootNamespace>
     <AssemblyName>ApiSurface</AssemblyName>
+    <!-- A build-time tool, not a published API: no XML doc file to generate. -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" />
