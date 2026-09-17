@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Windows-bound, and not by choice. The published binding surface exposes
+         System.Drawing types directly - ImageRotate.FlipType is a RotateFlipType,
+         ImageWatermark takes a Font, a Color, a Point and an ImageFormat - so a
+         workflow's .xaml names those types. Swapping in a portable imaging library
+         would break every workflow that upgrades, which is the one thing a revived
+         package must not do. System.Drawing.Common is Windows-only from .NET 7
+         onward, so net8.0-windows it is. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>BalaReva.EasyImage</RootNamespace>
+    <AssemblyName>BalaReva.EasyImage</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.EasyImage.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Easy Image Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      Image activities for UiPath, reimplemented on .NET 8. Type and property names
+      match BalaReva.EasyImage.Activities 3.0.1 so existing workflows keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.31" />
+  </ItemGroup>
+
+</Project>

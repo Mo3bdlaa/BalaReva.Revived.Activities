@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <!-- Matches the library under test. A net8.0-windows test host needs the Windows
+         Desktop runtime, so this suite runs on the Windows CI job, not the Linux one. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
     <IsPackable>false</IsPackable>
-    <!-- Test methods document themselves by name; XML doc warnings here are noise. -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <RootNamespace>BalaReva.EasyText.Tests</RootNamespace>
+    <RootNamespace>BalaReva.EasyImage.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/BalaReva.EasyText/BalaReva.EasyText.csproj" />
+    <ProjectReference Include="../../src/BalaReva.EasyImage/BalaReva.EasyImage.csproj" />
     <ProjectReference Include="../BalaReva.Revived.TestSupport/BalaReva.Revived.TestSupport.csproj" />
   </ItemGroup>
 

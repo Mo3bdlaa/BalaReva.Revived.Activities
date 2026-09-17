@@ -79,22 +79,30 @@ instead of someone's workflow.
 The current pass targets the eight packages that ship .NET 6 assets, since .NET 6 is out
 of support. Between them they hold **262 concrete activities**:
 
-| Package | Activities | Status |
-|---|---:|---|
-| `BalaReva.EasyText.Activities` | 12 | ✅ Reimplemented on .NET 8 |
-| `BalaReva.EasyImage.Activities` | 9 | Not started |
-| `BalaReva.Printer.Activities` | 10 | Not started |
-| `BalaReva.EasyOutlook.Activities` | 20 | Not started |
-| `BalaReva.Excel.Activities` | 39 | Not started |
-| `BalaReva.Word.Activities` | 39 | Not started |
-| `BalaReva.EasyPowerPoint.Activities` | 56 | Not started |
-| `BalaReva.EasyExcel.Activities` | 77 | Not started |
+| Package | Activities | Target | Status |
+|---|---:|---|---|
+| `BalaReva.EasyText.Activities` | 12 | `net8.0` | ✅ Reimplemented |
+| `BalaReva.EasyImage.Activities` | 9 | `net8.0-windows` | ✅ Reimplemented |
+| `BalaReva.Printer.Activities` | 10 | `net8.0-windows` | ✅ Reimplemented |
+| `BalaReva.EasyOutlook.Activities` | 20 | — | Not started |
+| `BalaReva.Excel.Activities` | 39 | — | Not started |
+| `BalaReva.Word.Activities` | 39 | — | Not started |
+| `BalaReva.EasyPowerPoint.Activities` | 56 | — | Not started |
+| `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
 
-EasyText went first because it is the only one of the eight with no Windows dependency,
-so its behaviour can be executed and asserted in CI rather than merely compiled. It now
-targets plain `net8.0`, which means it works in Cross-platform projects too — something
-the original could not do. The rest lean on Office COM interop, `System.Drawing` or the
-print spooler and will need a Windows runner to be tested honestly.
+EasyText moved to plain `net8.0`, so it now works in Cross-platform projects too —
+something the original could not do. EasyImage and Printer cannot follow it, and not
+for want of effort: their **binding surfaces are made of Windows types**. EasyImage
+takes a `Font`, a `Color`, a `Point` and a `RotateFlipType` as arguments; Printer's
+`PrinterStatus` is `System.Printing.PrintQueue` member for member, and its
+`AccessRightsEnum` values are `PrintSystemDesiredAccess` exactly. Substituting a
+portable library would break the very workflows these packages exist to keep working,
+so both target `net8.0-windows`.
+
+That splits CI in two. Everything builds on Linux via `EnableWindowsTargeting`, but
+`System.Drawing` throws there and a `net8.0-windows` test host needs a runtime Linux
+does not have — so the Linux job runs the EasyText suite and the Windows job runs all
+three.
 
 [docs/REVIVAL.md](docs/REVIVAL.md) covers the approach, and records the behavioural
 decisions that metadata could not settle — line numbering chief among them.

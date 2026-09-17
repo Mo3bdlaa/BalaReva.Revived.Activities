@@ -8,7 +8,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  # Everything builds on Linux thanks to EnableWindowsTargeting, but only the
+  # cross-platform package can be *run* here: EasyImage needs GDI+ and Printer needs
+  # the Windows Desktop runtime, neither of which exists on a Linux agent.
+  linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,17 +20,17 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore
-        run: dotnet restore BalaReva.Revived.sln
+      - name: Build everything
+        run: dotnet build BalaReva.Revived.sln -c Release
 
-      - name: Build
-        run: dotnet build BalaReva.Revived.sln -c Release --no-restore
-
-      - name: Test
-        run: dotnet test BalaReva.Revived.sln -c Release --no-build --verbosity normal
+      - name: Test the cross-platform package
+        run: dotnet test tests/BalaReva.EasyText.Tests/BalaReva.EasyText.Tests.csproj -c Release --no-build
 
       - name: Pack
-        run: dotnet pack src/BalaReva.EasyText/BalaReva.EasyText.csproj -c Release --no-build -o artifacts
+        run: |
+          dotnet pack src/BalaReva.EasyText/BalaReva.EasyText.csproj -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.EasyImage/BalaReva.EasyImage.csproj -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.Printer/BalaReva.Printer.csproj   -c Release --no-build -o artifacts
 
       # The audit found a published package shipping a .NET Framework assembly out of
       # a net6.0-windows folder. This makes sure we never ship that shape ourselves.
@@ -38,3 +41,21 @@ jobs:
         with:
           name: packages
           path: artifacts/*.nupkg
+
+  # The Windows-only packages are only really tested here. EasyImage exercises real
+  # GDI+ on real files; Printer runs its activities against a stand-in spooler, since
+  # pausing or purging a queue on a build agent is not something to do for real.
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build everything
+        run: dotnet build BalaReva.Revived.sln -c Release
+
+      - name: Test everything
+        run: dotnet test BalaReva.Revived.sln -c Release --no-build --verbosity normal

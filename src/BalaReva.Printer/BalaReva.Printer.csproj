@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Windows-bound by the binding surface, not by preference. PrinterStatus
+         exposes 38 booleans that are System.Printing.PrintQueue members one for one,
+         and AccessRightsEnum's values are PrintSystemDesiredAccess exactly. That is
+         WPF's printing stack (ReachFramework), which UseWPF brings in and which only
+         exists on Windows. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>BalaReva.Printer</RootNamespace>
+    <AssemblyName>BalaReva.Printer</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.Printer.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Printer Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      Printer and print queue activities for UiPath, reimplemented on .NET 8. Type and
+      property names match BalaReva.Printer.Activities 2019.2.1 so existing workflows
+      keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+  </ItemGroup>
+
+</Project>
