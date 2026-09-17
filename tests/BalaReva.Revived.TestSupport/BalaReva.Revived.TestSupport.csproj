@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <!-- A helper library, not a test assembly. Referencing xunit is otherwise enough
+         for a solution-wide `dotnet test` to try running it, which aborts the run
+         because it has no test host. -->
+    <IsTestProject>false</IsTestProject>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <RootNamespace>BalaReva.Revived.TestSupport</RootNamespace>
   </PropertyGroup>
