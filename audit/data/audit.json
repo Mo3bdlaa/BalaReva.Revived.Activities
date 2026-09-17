@@ -1,0 +1,1923 @@
+{
+ "dependencies": [
+  {
+   "advisories": [],
+   "id": "DocumentFormat.OpenXml",
+   "latest_stable": "3.5.1",
+   "on_nuget_org": true,
+   "used_versions": [
+    "2.20.0"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "DotNetZip.Reduced",
+   "latest_stable": "1.9.1.8",
+   "on_nuget_org": true,
+   "used_versions": [
+    "1.9.1.8"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Elasticsearch.Net",
+   "latest_stable": "7.17.5",
+   "on_nuget_org": true,
+   "used_versions": [
+    "6.0.0"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Ionic.Zip",
+   "latest_stable": "1.9.1.8",
+   "on_nuget_org": true,
+   "used_versions": [
+    "1.9.1.8"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Microsoft.Office.Interop.Excel",
+   "latest_stable": "16.0.18925.20022",
+   "on_nuget_org": true,
+   "used_versions": [
+    "15.0.4795.1000"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Microsoft.Office.Interop.PowerPoint",
+   "latest_stable": "15.0.4420.1018",
+   "on_nuget_org": true,
+   "used_versions": [
+    "15.0.4420.1017"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Microsoft.Practices.EnterpriseLibrary.Common.dll",
+   "latest_stable": "3.1.0",
+   "on_nuget_org": true,
+   "used_versions": [
+    "3.1.0"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Microsoft.Practices.EnterpriseLibrary.Data.dll",
+   "latest_stable": "3.1.0",
+   "on_nuget_org": true,
+   "used_versions": [
+    "3.1.0"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "MicrosoftOfficeCore",
+   "latest_stable": "15.0.0",
+   "on_nuget_org": true,
+   "used_versions": [
+    "15.0.0"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "Newtonsoft.Json",
+   "latest_stable": "13.0.4",
+   "on_nuget_org": true,
+   "used_versions": [
+    "13.0.1"
+   ]
+  },
+  {
+   "advisories": [
+    {
+     "affects": "4.0.7",
+     "aliases": [
+      "CVE-2024-32655"
+     ],
+     "fixed_in": [
+      "4.0.14",
+      "4.1.13",
+      "5.0.18",
+      "6.0.11",
+      "7.0.7",
+      "8.0.3"
+     ],
+     "id": "GHSA-x9vc-6hfv-hg8c",
+     "severity": "HIGH",
+     "summary": "Npgsql vulnerable to SQL Injection via Protocol Message Size Overflow"
+    }
+   ],
+   "id": "Npgsql",
+   "latest_stable": "10.0.3",
+   "on_nuget_org": true,
+   "used_versions": [
+    "4.0.7"
+   ]
+  },
+  {
+   "advisories": [
+    {
+     "affects": "0.26.0",
+     "aliases": [
+      "CVE-2026-44788"
+     ],
+     "fixed_in": [
+      "0.48.0"
+     ],
+     "id": "GHSA-6c8g-7p36-r338",
+     "severity": "MODERATE",
+     "summary": "SharpCompress has directory traversal via directory entries in WriteToDirectory (zip slip variant)"
+    },
+    {
+     "affects": "0.26.0",
+     "aliases": [
+      "CVE-2021-39208"
+     ],
+     "fixed_in": [
+      "0.29"
+     ],
+     "id": "GHSA-jp7f-grcv-6mjf",
+     "severity": "MODERATE",
+     "summary": "Partial path traversal in sharpcompress"
+    }
+   ],
+   "id": "SharpCompress",
+   "latest_stable": "1.0.0",
+   "on_nuget_org": true,
+   "used_versions": [
+    "0.26.0"
+   ]
+  },
+  {
+   "advisories": [
+    {
+     "affects": "1.2.0",
+     "aliases": [
+      "CVE-2021-32840"
+     ],
+     "fixed_in": [
+      "1.3.3"
+     ],
+     "id": "GHSA-m22m-h4rf-pwq3",
+     "severity": "HIGH",
+     "summary": "Path Traversal in SharpZipLib"
+    },
+    {
+     "affects": "1.2.0",
+     "aliases": [
+      "CVE-2021-32842"
+     ],
+     "fixed_in": [
+      "1.3.3"
+     ],
+     "id": "GHSA-mm6g-mmq6-53ff",
+     "severity": "MODERATE",
+     "summary": "Path Traversal in SharpZipLib"
+    }
+   ],
+   "id": "SharpZipLib",
+   "latest_stable": "1.4.2",
+   "on_nuget_org": true,
+   "used_versions": [
+    "1.2.0"
+   ]
+  },
+  {
+   "advisories": [],
+   "id": "iTextSharp",
+   "latest_stable": "5.5.13.6",
+   "on_nuget_org": true,
+   "used_versions": [
+    "5.5.13.1"
+   ]
+  }
+ ],
+ "feed": "https://gallery.uipath.com/api/v3/index.json",
+ "generated": "2026-09-17",
+ "packages": [
+  {
+   "assemblies": {
+    "lib/BalaReva.Access.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Access.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Access",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.Access.Activities.nuspec",
+    "lib/BalaReva.Access.Design.dll",
+    "lib/BalaReva.Access.dll"
+   ],
+   "dependencies": [],
+   "description": "This package contains the below activities for Access\n\n1.Execute Macro - It is used to execute the Access Macro",
+   "id": "BalaReva.Access.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2.0.2"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.CamiCat.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.CamiCat.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Excel.Base.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.CSV.Activities.nuspec",
+    "lib/BalaReva.CamiCat.Design.dll",
+    "lib/BalaReva.CamiCat.dll",
+    "lib/BalaReva.Excel.Base.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "Microsoft.Office.Interop.Excel",
+     "tfm": "(any)",
+     "version": "15.0.4795.1000"
+    }
+   ],
+   "description": "This activity converts the csv file to an excel file .The activity has the options [Input-format]. It helps to convert the column which the user desires.Main While doing the conversion , will face is issue zero omission convert to string. Date format that can fix by user",
+   "id": "BalaReva.CSV.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2019.1.0"
+  },
+  {
+   "assemblies": {},
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.DataTable.Activities.nuspec",
+    "lib/DataTableExtensions.Activities.dll",
+    "lib/DataTableGroup.Design.dll"
+   ],
+   "dependencies": [],
+   "description": "1.Add Data Row Range.\n2.Remove Data Row Select.\n3.Group By Aggregation (Sum,Count,Avg, Max, Min).\n4.DataTable to XML Document.\n5.DataTable to XML File.\n6.Sum,Count,Avg, Max, Min.\n7.NativeGroupAggregation",
+   "id": "BalaReva.DataTable.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2.0.2"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.DirFileSize.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.DirFileSize.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.DirFileSize.Activities.nuspec",
+    "lib/BalaReva.DirFileSize.Design.dll",
+    "lib/BalaReva.DirFileSize.dll"
+   ],
+   "dependencies": [],
+   "description": "It has 2 activities to get the size of the directory or File\n1.Directory Size\n2.File Size",
+   "id": "BalaReva.DirFileSize.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2019.1.1"
+  },
+  {
+   "assemblies": {
+    "lib/net6.0-windows7.0/BalaReva.EasyDataTable.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation",
+      "System.Drawing",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyDataTable.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "System.Activities",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "BalaReva.EasyDataTable",
+   "contents": [
+    "BalaReva.EasyDataTable.Activities.nuspec",
+    "content/Images/BR.png",
+    "contentFiles/any/net6.0-windows7.0/Images/BR.png",
+    "lib/net6.0-windows7.0/BalaReva.EasyDataTable.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyDataTable.dll"
+   ],
+   "dependencies": [],
+   "description": "This package has some activities that are to make easy the datatable related activities",
+   "id": "BalaReva.EasyDataTable.Activities",
+   "lib_tfms": [
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [
+    {
+     "actual": ".NETFramework,Version=v4.6.1",
+     "corelib": "mscorlib",
+     "folder": "net6.0-windows7.0",
+     "path": "lib/net6.0-windows7.0/BalaReva.EasyDataTable.Design.dll"
+    }
+   ],
+   "published": "2024-01-12",
+   "status": "broken",
+   "version": "5.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.EasyElasticsearch.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.EasyElasticsearch.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.EasyElasticsearch.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Elasticsearch.Net",
+      "ElasticsearchResponseBase",
+      "ElasticsearchScope",
+      "Newtonsoft.Json",
+      "Newtonsoft.Json.Linq",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Metadata",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.EasyElasticsearch.Activities.nuspec",
+    "PackageIcon.png",
+    "icon.png",
+    "lib/BalaReva.EasyElasticsearch.Design.dll",
+    "lib/BalaReva.EasyElasticsearch.Utilities.dll",
+    "lib/BalaReva.EasyElasticsearch.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "Newtonsoft.Json",
+     "tfm": "(any)",
+     "version": "13.0.1"
+    },
+    {
+     "id": "Elasticsearch.Net",
+     "tfm": "(any)",
+     "version": "6.0.0"
+    }
+   ],
+   "description": "This package's activities are to make easy automation in Elasticsearch.",
+   "id": "BalaReva.EasyElasticsearch.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2022-05-04",
+   "status": "legacy",
+   "version": "1.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.EasyExcel.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyExcel.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyExcel.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "DocumentFormat.OpenXml",
+      "DocumentFormat.OpenXml.Packaging",
+      "DocumentFormat.OpenXml.Spreadsheet",
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyExcel.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyExcel.Utilities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyExcel.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "DocumentFormat.OpenXml",
+      "DocumentFormat.OpenXml.Packaging",
+      "DocumentFormat.OpenXml.Spreadsheet",
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Drawing.Primitives"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.EasyExcel.Activities.nuspec",
+    "lib/net461/BalaReva.EasyExcel.Design.dll",
+    "lib/net461/BalaReva.EasyExcel.Utilities.dll",
+    "lib/net461/BalaReva.EasyExcel.dll",
+    "lib/net461/Interop.Microsoft.Office.Interop.PowerPoint.dll",
+    "lib/net461/Microsoft.Office.Interop.Excel.dll",
+    "lib/net461/Office.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyExcel.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyExcel.Utilities.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyExcel.dll",
+    "lib/net6.0-windows7.0/Interop.Microsoft.Office.Interop.PowerPoint.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Excel.dll",
+    "lib/net6.0-windows7.0/Office.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "DocumentFormat.OpenXml",
+     "tfm": ".NETFramework4.6.1",
+     "version": "2.20.0"
+    },
+    {
+     "id": "DocumentFormat.OpenXml",
+     "tfm": "net6.0-windows7.0",
+     "version": "2.20.0"
+    }
+   ],
+   "description": "This package's activities are to make easy automation in Excel.",
+   "id": "BalaReva.EasyExcel.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-04-28",
+   "status": "windows",
+   "version": "32.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.EasyImage.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyImage.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing",
+      "System.Drawing.Imaging"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyImage.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyImage.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Drawing.Imaging",
+      "System.Drawing.Primitives"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.EasyImage.Activities.nuspec",
+    "lib/net461/BalaReva.EasyImage.Design.dll",
+    "lib/net461/BalaReva.EasyImage.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyImage.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyImage.dll"
+   ],
+   "dependencies": [],
+   "description": "Package Description",
+   "id": "BalaReva.EasyImage.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-10-30",
+   "status": "windows",
+   "version": "3.0.1"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.EasyLanguage.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.EasyLanguage.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.EasyLanguage.Activities.nuspec",
+    "lib/BalaReva.EasyLanguage.Design.dll",
+    "lib/BalaReva.EasyLanguage.dll"
+   ],
+   "dependencies": [],
+   "description": "This a package has an activity called \"LanguageDetector\". It detects the language based on the Input",
+   "id": "BalaReva.EasyLanguage.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "1.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.EasyOutlook.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyOutlook.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyOutlook.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Outlook",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyOutlook.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyOutlook.Utilities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyOutlook.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "Microsoft.Office.Interop.Outlook",
+      "System.Activities",
+      "System.Drawing",
+      "System.Drawing.Common"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.EasyOutlook.Activities.nuspec",
+    "lib/net461/BalaReva.EasyOutlook.Design.dll",
+    "lib/net461/BalaReva.EasyOutlook.Utilities.dll",
+    "lib/net461/BalaReva.EasyOutlook.dll",
+    "lib/net461/Microsoft.Office.Interop.Outlook.dll",
+    "lib/net461/Microsoft.Office.Interop.Word.dll",
+    "lib/net461/office.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyOutlook.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyOutlook.Utilities.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyOutlook.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Outlook.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Word.dll",
+    "lib/net6.0-windows7.0/office.dll"
+   ],
+   "dependencies": [],
+   "description": "New Contact - Insert a new contact in the outlook.\nGet Contact - To get all the contacts from outlook.\nNew Appointment - Add a new appointment into the Outlook.\nNew Meeting - Send a new meeting request to others .\nNew Notes - Add a new notes in to the Outlook.\nGet All Notes - To get all the notes from outlook.",
+   "id": "BalaReva.EasyOutlook.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-10-30",
+   "status": "windows",
+   "version": "3.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.Easy.PowerPoint.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Easy.PowerPoint.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Easy.PowerPoint.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "Microsoft.Office.Interop.PowerPoint",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Easy.PowerPoint.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Easy.PowerPoint.Utilities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "System.Activities"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Easy.PowerPoint.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "Microsoft.Office.Interop.PowerPoint",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Drawing.Primitives",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.EasyPowerPoint.Activities.nuspec",
+    "lib/net461/BalaReva.Easy.PowerPoint.Design.dll",
+    "lib/net461/BalaReva.Easy.PowerPoint.Utilities.dll",
+    "lib/net461/BalaReva.Easy.PowerPoint.dll",
+    "lib/net461/Microsoft.Office.Interop.Excel.dll",
+    "lib/net461/Microsoft.Office.Interop.Graph.dll",
+    "lib/net461/Microsoft.Office.Interop.PowerPoint.dll",
+    "lib/net461/Office.dll",
+    "lib/net6.0-windows7.0/BalaReva.Easy.PowerPoint.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.Easy.PowerPoint.Utilities.dll",
+    "lib/net6.0-windows7.0/BalaReva.Easy.PowerPoint.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Excel.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Graph.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.PowerPoint.dll",
+    "lib/net6.0-windows7.0/Office.dll"
+   ],
+   "dependencies": [],
+   "description": "This package is having the activities to make easy the PowerPoint automation.",
+   "id": "BalaReva.EasyPowerPoint.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-05-08",
+   "status": "windows",
+   "version": "11.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.EasyText.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyText.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.EasyText.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyText.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyText.Utilities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.EasyText.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Drawing.Common"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.EasyText.Activities.nuspec",
+    "lib/net461/BalaReva.EasyText.Design.dll",
+    "lib/net461/BalaReva.EasyText.Utilities.dll",
+    "lib/net461/BalaReva.EasyText.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyText.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyText.Utilities.dll",
+    "lib/net6.0-windows7.0/BalaReva.EasyText.dll"
+   ],
+   "dependencies": [],
+   "description": "TextScope - It is a scope activity.It keeps only the file path. It doesn't keep the text file resource.\nDeleteAt - Delete the line at specific line\nFind & Replace All - Find and replace in entire file.\nFindReplaceAt - Find and replace the text in a specific from and to line (if doesn't know the To line , can mention the -1)\nFind Text - Find the text position \nFindLineIndex - Find the text and return the line indexes.\nInsert Line At - Insert the line in specific line index\nLine Count - Return the total line counts\nRead Specific Line - Read the lines in the specific line index From and To (if don't know the To line, can mention the -1)\nRemove Empty Line - It removes all the empty lines.\nReadAll- Read all text and load into a string variable\nReadAllArray - Read the text and load into array variable",
+   "id": "BalaReva.EasyText.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-10-30",
+   "status": "windows",
+   "version": "3.0.1"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.Enterprise.EasyExcel.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "Microsoft.Office.Interop.PowerPoint",
+      "System.Activities",
+      "System.Activities.Hosting",
+      "System.Activities.Hosting.IWorkflowInstanceExtension.GetAdditionalExtensions",
+      "System.Activities.Hosting.IWorkflowInstanceExtension.SetInstance",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Metadata",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Windows.Forms",
+      "UiPath.Marketplace.License.Validations"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Enterprise.Excel.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Enterprise.Excel.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.Enterprise.EasyExcel.Activities.nuspec",
+    "PackageIcon.png",
+    "icon.png",
+    "lib/BalaReva.Enterprise.EasyExcel.dll",
+    "lib/BalaReva.Enterprise.Excel.Design.dll",
+    "lib/BalaReva.Enterprise.Excel.Utilities.dll",
+    "lib/Licensing.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "Microsoft.Office.Interop.Excel",
+     "tfm": "(any)",
+     "version": "15.0.4795.1000"
+    },
+    {
+     "id": "MicrosoftOfficeCore",
+     "tfm": "(any)",
+     "version": "15.0.0"
+    },
+    {
+     "id": "Microsoft.Office.Interop.PowerPoint",
+     "tfm": "(any)",
+     "version": "15.0.4420.1017"
+    }
+   ],
+   "description": "This package's activities are to make automation in Excel easy.\n\nNOTE: This is a paid package which requires a Marketplace license. To use it, please purchase the license or try it free for 30 days here: https://marketplace.uipath.com/listings/balareva-excel-automation-for-enterprises",
+   "id": "BalaReva.Enterprise.EasyExcel.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2022-03-16",
+   "status": "legacy",
+   "version": "3.0.1"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.Excel.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Excel.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Excel.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities",
+      "System.Drawing",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Excel.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Excel.Utilities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "System.Activities"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Excel.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Windows.Forms"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.Excel.Activities.nuspec",
+    "lib/net461/BalaReva.Excel.Design.dll",
+    "lib/net461/BalaReva.Excel.Utilities.dll",
+    "lib/net461/BalaReva.Excel.dll",
+    "lib/net461/Interop.Microsoft.Office.Interop.PowerPoint.dll",
+    "lib/net461/Microsoft.Office.Interop.Excel.dll",
+    "lib/net461/Office.dll",
+    "lib/net6.0-windows7.0/BalaReva.Excel.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.Excel.Utilities.dll",
+    "lib/net6.0-windows7.0/BalaReva.Excel.dll",
+    "lib/net6.0-windows7.0/Interop.Microsoft.Office.Interop.PowerPoint.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Excel.dll",
+    "lib/net6.0-windows7.0/Office.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "DocumentFormat.OpenXml",
+     "tfm": ".NETFramework4.6.1",
+     "version": "2.20.0"
+    },
+    {
+     "id": "DocumentFormat.OpenXml",
+     "tfm": "net6.0-windows7.0",
+     "version": "2.20.0"
+    }
+   ],
+   "description": "Tha package contains more activities .It make more the excel automation.",
+   "id": "BalaReva.Excel.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-05-03",
+   "status": "windows",
+   "version": "2021.1.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.Excel.Graph.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.5"
+    },
+    "lib/BalaReva.Excel.Graph.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Excel",
+      "System.Activities"
+     ],
+     "target_framework": ".NETFramework,Version=v4.5"
+    }
+   },
+   "authors": "Balamurugan",
+   "contents": [
+    "BalaReva.Excel.Graph.Activities.nuspec",
+    "lib/BalaReva.Excel.Graph.Design.dll",
+    "lib/BalaReva.Excel.Graph.dll",
+    "lib/Microsoft.Office.Interop.Excel.dll"
+   ],
+   "dependencies": [],
+   "description": "Using these activities can create the Pie,Column,Line and Bar graph.",
+   "id": "BalaReva.Excel.Graph.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2.0.1"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.Externals.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Externals.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Ionic.Zip",
+      "Newtonsoft.Json",
+      "Newtonsoft.Json.Linq",
+      "SharpCompress",
+      "SharpCompress.Archives",
+      "SharpCompress.Common",
+      "SharpCompress.Readers",
+      "System.Activities"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.Externals.Activities.nuspec",
+    "lib/BalaReva.Externals.Design.dll",
+    "lib/BalaReva.Externals.dll",
+    "lib/Ionic.Zip.dll",
+    "lib/Newtonsoft.Json.dll",
+    "lib/SharpCompress.dll"
+   ],
+   "dependencies": [],
+   "description": "1.Simple download file . \n2.Zip the files [Multiple folder option].\n3.UnZip the Zip flie.\n4.Directory Size\n5.File Size\n6.ServiceStatus\n7.ServiceExecute\n8.Log file\n9.Currency Converter\n10.Download File from a link\n11.Exchange Rate",
+   "id": "BalaReva.Externals.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "4.0.3"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.FileProperties.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.FileProperties.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.FileProperties.Activities.nuspec",
+    "lib/BalaReva.FileProperties.Design.dll",
+    "lib/BalaReva.FileProperties.dll",
+    "lib/BalaReva.Utilities.dll"
+   ],
+   "dependencies": [],
+   "description": "It has 3 activities\n1.FileReadOnly\n2.FileSecurities\n3.HideUnhide",
+   "id": "BalaReva.FileProperties.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "1.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.Informix.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Informix.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Practices.EnterpriseLibrary.Data",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.Informix.Activities.nuspec",
+    "lib/BalaReva.Informix.Design.dll",
+    "lib/BalaReva.Informix.dll",
+    "lib/IBM.Data.Informix.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "Microsoft.Practices.EnterpriseLibrary.Common.dll",
+     "tfm": "(any)",
+     "version": "3.1.0"
+    },
+    {
+     "id": "Microsoft.Practices.EnterpriseLibrary.Data.dll",
+     "tfm": "(any)",
+     "version": "3.1.0"
+    }
+   ],
+   "description": "This package contains the below activities . It make you easy to retrieve the data from the Informix database. you can use stored procedure also the activities.\n1. Execute DataTable- This bring the information from database even you use the direct query or stored procedure.\n2. Execute NonQuery-It helps to execute the To insert , update and delete statements.\n3. Execute Scalar-Returns the first column of the first row in the result set returned by the query or stored procedure as Object.",
+   "id": "BalaReva.Informix.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2019.2.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.NumberFormatter.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.NumberFormatter.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.NumberFormatter.Activities.nuspec",
+    "lib/BalaReva.NumberFormatter.Design.dll",
+    "lib/BalaReva.NumberFormatter.dll"
+   ],
+   "dependencies": [],
+   "description": "It has 2 activities that to  convert numeric to a desire format.\n\n1.Double Formatter\n2.Number Formatter",
+   "id": "BalaReva.NumberFormatter.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2019.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.PDF.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.PDF2.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing",
+      "iTextSharp.text",
+      "iTextSharp.text.pdf",
+      "iTextSharp.text.pdf.parser"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.Pdf.Activities.nuspec",
+    "lib/BalaReva.PDF.Design.dll",
+    "lib/BalaReva.PDF2.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "iTextSharp",
+     "tfm": "(any)",
+     "version": "5.5.13.1"
+    }
+   ],
+   "description": "Image Extract - It extracts all the images into a folder\nPdf Splitter-Split the page with option of EachPage,EvenPage ,OddPage  and PageRange\nSetPassword-Set the password to a pdf file\nPageCount\nRead comments",
+   "id": "BalaReva.Pdf.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2019.3.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.PostgreSql.Activities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Npgsql",
+      "NpgsqlCommand",
+      "NpgsqlConnection",
+      "NpgsqlDataAdapter",
+      "NpgsqlParameter",
+      "NpgsqlParameterCollection",
+      "NpgsqlTransaction",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.PostgreSql.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.PostgreSql.Activities.nuspec",
+    "lib/BalaReva.PostgreSql.Activities.dll",
+    "lib/BalaReva.PostgreSql.Design.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "Npgsql",
+     "tfm": "(any)",
+     "version": "4.0.7"
+    }
+   ],
+   "description": "This package contains the below activities . It make you easy to retrieve the data from the PostgreSql database. you can use stored procedure also the activities.\n1. Execute DataTable- This bring the information from database even you use the direct query or stored procedure.\n2. Execute NonQuery-It helps to execute the To insert , update and delete statements.\n3. Execute Scalar-Returns the first column of the first row in the result set returned by the query or stored procedure as Object.",
+   "id": "BalaReva.PostgreSql.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2021-07-09",
+   "status": "legacy",
+   "version": "2021.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.PowerPoint.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.PowerPoint.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.PowerPoint.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.PowerPoint",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.PowerPoint.Activities.nuspec",
+    "lib/BalaReva.PowerPoint.Design.dll",
+    "lib/BalaReva.PowerPoint.Utilities.dll",
+    "lib/BalaReva.PowerPoint.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "Microsoft.Office.Interop.PowerPoint",
+     "tfm": "(any)",
+     "version": "15.0.4420.1017"
+    }
+   ],
+   "description": "The Package is for PowerPoint.\n1.Insert Slide\n2.Delete Slide\n3.Insert Picture to the Slide\n4.Export to Pdf\n5.Create New PowerPoint",
+   "id": "BalaReva.PowerPoint.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "3.0.2"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.Printer.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Printer.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing",
+      "System.Drawing.Printing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Printer.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Printer.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Drawing.Printing"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.Printer.Activities.nuspec",
+    "lib/net461/BalaReva.Printer.Design.dll",
+    "lib/net461/BalaReva.Printer.dll",
+    "lib/net6.0-windows7.0/BalaReva.Printer.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.Printer.dll"
+   ],
+   "dependencies": [],
+   "description": "This pacakge has more activities for printer.",
+   "id": "BalaReva.Printer.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-10-30",
+   "status": "windows",
+   "version": "2019.2.1"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.Web.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Web.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.Web.Activities.nuspec",
+    "lib/BalaReva.Web.Design.dll",
+    "lib/BalaReva.Web.dll"
+   ],
+   "dependencies": [],
+   "description": "Web Content - To get the web page content in the specified link.\nBroken Link- Verify the link active or inactive\nWebLink Extract - Extract all the links from the web page.",
+   "id": "BalaReva.Web.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "3.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.WindowsServiceManager.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationFramework",
+      "System.Activities.Presentation"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.WindowsServiceManager.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan",
+   "contents": [
+    "BalaReva.WindowsService.Activities.nuspec",
+    "lib/BalaReva.WindowsServiceManager.Design.dll",
+    "lib/BalaReva.WindowsServiceManager.dll"
+   ],
+   "dependencies": [],
+   "description": "This activities that can able to do the below process in the windows services and can get information of the windows services.\nStart,Stop,Pause,Continue,Restart,get status of the service",
+   "id": "BalaReva.WindowsService.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/net461/BalaReva.Word.Activities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Microsoft.Office.Interop.Word",
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Drawing.Imaging"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Word.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net461/BalaReva.Word.Utilities.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Word.Activities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "Microsoft.Office.Interop.Word",
+      "System.Activities",
+      "System.Activities.Statements",
+      "System.Activities.Validation",
+      "System.Drawing",
+      "System.Drawing.Common",
+      "System.Drawing.Imaging"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Word.Design.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    },
+    "lib/net6.0-windows7.0/BalaReva.Word.Utilities.dll": {
+     "corelib": "System.Runtime",
+     "is_net_framework": false,
+     "notable_names": [],
+     "target_framework": ".NETCoreApp,Version=v6.0"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BR.png",
+    "BalaReva.Word.Activities.nuspec",
+    "lib/net461/BalaReva.Word.Activities.dll",
+    "lib/net461/BalaReva.Word.Design.dll",
+    "lib/net461/BalaReva.Word.Utilities.dll",
+    "lib/net461/Microsoft.Office.Interop.Word.dll",
+    "lib/net461/Office.dll",
+    "lib/net6.0-windows7.0/BalaReva.Word.Activities.dll",
+    "lib/net6.0-windows7.0/BalaReva.Word.Design.dll",
+    "lib/net6.0-windows7.0/BalaReva.Word.Utilities.dll",
+    "lib/net6.0-windows7.0/Microsoft.Office.Interop.Word.dll",
+    "lib/net6.0-windows7.0/Office.dll"
+   ],
+   "dependencies": [],
+   "description": "This package allows the user to make easy the word automation.",
+   "id": "BalaReva.Word.Activities",
+   "lib_tfms": [
+    "net461",
+    "net6.0-windows7.0"
+   ],
+   "mismatches": [],
+   "published": "2023-05-10",
+   "status": "windows",
+   "version": "8.0.0"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.Zip.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.Zip.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "Ionic.Zip",
+      "Ionic.Zip.Reduced",
+      "SharpCompress",
+      "SharpCompress.Archives",
+      "SharpCompress.Common",
+      "SharpCompress.Readers",
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.ZipUnzip.Activities.nuspec",
+    "lib/BalaReva.Zip.Design.dll",
+    "lib/BalaReva.Zip.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "DotNetZip.Reduced",
+     "tfm": "(any)",
+     "version": "1.9.1.8"
+    },
+    {
+     "id": "SharpCompress",
+     "tfm": "(any)",
+     "version": "0.26.0"
+    },
+    {
+     "id": "Ionic.Zip",
+     "tfm": "(any)",
+     "version": "1.9.1.8"
+    }
+   ],
+   "description": "Zip -It is a popular archive format widely using in Internet. ZIP files are data containers. They store one or several files and folders in the compressed form as a single file. Password is optional. It compresses in \u201czip\u201d and \u201crar\u201d format.\nUnzip-It is the act of extracting the files from a zipped single file (with password) to a specific folder.",
+   "id": "BalaReva.ZipUnzip.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2021-10-12",
+   "status": "legacy",
+   "version": "2020.4.3"
+  },
+  {
+   "assemblies": {
+    "lib/BalaReva.ZipGz.Design.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.Activities",
+      "System.Activities.Presentation",
+      "System.Activities.Presentation.Model",
+      "System.Windows.Forms",
+      "WindowsBase"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    },
+    "lib/BalaReva.ZipGz.dll": {
+     "corelib": "mscorlib",
+     "is_net_framework": true,
+     "notable_names": [
+      "System.Activities",
+      "System.Drawing"
+     ],
+     "target_framework": ".NETFramework,Version=v4.6.1"
+    }
+   },
+   "authors": "Balamurugan Revathi",
+   "contents": [
+    "BalaReva.ZipUnzipGz.Activities.nuspec",
+    "lib/BalaReva.ZipGz.Design.dll",
+    "lib/BalaReva.ZipGz.dll",
+    "lib/ICSharpCode.SharpZipLib.dll"
+   ],
+   "dependencies": [
+    {
+     "id": "SharpZipLib",
+     "tfm": "(any)",
+     "version": "1.2.0"
+    }
+   ],
+   "description": "UnZip the .tar.gz and .tar files",
+   "id": "BalaReva.ZipUnzipGz.Activities",
+   "lib_tfms": [
+    "(none)"
+   ],
+   "mismatches": [],
+   "published": "2020-10-28",
+   "status": "legacy",
+   "version": "2.0.0"
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+# Audit working cache: ~11 MB of downloaded .nupkg files, all re-fetchable.
+audit/.cache/
+__pycache__/
+*.pyc
+
+# .NET
+bin/
+obj/
+*.user
