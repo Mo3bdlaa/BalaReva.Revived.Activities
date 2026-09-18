@@ -25,5 +25,5 @@ public sealed class DeleteEmptyRows : BaseActivity
     protected override void ExecuteWork(
         CodeActivityContext context, IExcelWorkbook workbook, string sheetName)
         => AffectedRows.Set(
-            context, workbook.DeleteEmptyRows(sheetName, StartRowIndex?.Get(context) ?? 1));
+            context, workbook.DeleteEmptyRows(sheetName, StartRowIndex?.Get(context) ?? 0));
 }

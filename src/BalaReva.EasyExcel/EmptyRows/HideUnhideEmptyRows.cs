@@ -32,5 +32,5 @@ public sealed class HideUnhideEmptyRows : BaseActivity
     protected override void ExecuteWork(
         CodeActivityContext context, IExcelWorkbook workbook, string sheetName)
         => AffectedRows.Set(context, workbook.HideUnhideEmptyRows(
-            sheetName, StartRowIndex?.Get(context) ?? 1, HideDelete));
+            sheetName, StartRowIndex?.Get(context) ?? 0, HideDelete));
 }

@@ -25,5 +25,5 @@ public sealed class FindEmptyRows : BaseActivity
     protected override void ExecuteWork(
         CodeActivityContext context, IExcelWorkbook workbook, string sheetName)
         => AffectedRows.Set(
-            context, workbook.FindEmptyRows(sheetName, StartRowIndex?.Get(context) ?? 1));
+            context, workbook.FindEmptyRows(sheetName, StartRowIndex?.Get(context) ?? 0));
 }

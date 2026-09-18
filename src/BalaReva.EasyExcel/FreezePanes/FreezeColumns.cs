@@ -25,5 +25,5 @@ public sealed class FreezeColumns : BaseActivity
     /// <inheritdoc />
     protected override void ExecuteWork(
         CodeActivityContext context, IExcelWorkbook workbook, string sheetName)
-        => workbook.FreezeColumns(sheetName, NoColumns?.Get(context) ?? 1, FreezeOption);
+        => workbook.FreezeColumns(sheetName, NoColumns?.Get(context) ?? 0, FreezeOption);
 }

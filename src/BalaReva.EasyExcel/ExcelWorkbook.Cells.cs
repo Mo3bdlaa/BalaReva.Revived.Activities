@@ -35,8 +35,10 @@ public sealed partial class ExcelWorkbook
             case FontStyleEnum.BoldItalic: font.Bold = true; font.Italic = true; break;
         }
 
+        // FontUnderLineEnum carries Excel's own XlUnderlineStyle numbers, so this is a
+        // straight cast rather than a mapping that could drift out of step.
         if (request.FontUnderLine != FontUnderLineEnum.None)
-            font.Underline = Underline(request.FontUnderLine);
+            font.Underline = (Interop.XlUnderlineStyle)(int)request.FontUnderLine;
 
         switch (request.FontScript)
         {
@@ -53,15 +55,6 @@ public sealed partial class ExcelWorkbook
 
         Save();
     }
-
-    private static Interop.XlUnderlineStyle Underline(FontUnderLineEnum style) => style switch
-    {
-        FontUnderLineEnum.Single => Interop.XlUnderlineStyle.xlUnderlineStyleSingle,
-        FontUnderLineEnum.Double => Interop.XlUnderlineStyle.xlUnderlineStyleDouble,
-        FontUnderLineEnum.SingleAccounting => Interop.XlUnderlineStyle.xlUnderlineStyleSingleAccounting,
-        FontUnderLineEnum.DoubleAccounting => Interop.XlUnderlineStyle.xlUnderlineStyleDoubleAccounting,
-        _ => Interop.XlUnderlineStyle.xlUnderlineStyleNone,
-    };
 
     /// <inheritdoc />
     public CellFontRequest GetRangeStyle(string sheetName, string cellRange)
@@ -145,7 +138,7 @@ public sealed partial class ExcelWorkbook
 
         // Right to left, so deleting one does not shift the ones still to go.
         foreach (var column in (columnsRange ?? []).Reverse())
-            sheet.Range[column].EntireColumn.Delete();
+            sheet.Range[Span(column)].EntireColumn.Delete();
 
         Save();
     }
@@ -157,9 +150,22 @@ public sealed partial class ExcelWorkbook
 
         // Bottom up, for the same reason as the columns above.
         foreach (var row in (rowRange ?? []).Reverse())
-            sheet.Range[$"{row}:{row}".Replace(":", ":", StringComparison.Ordinal)].EntireRow.Delete();
+            sheet.Range[Span(row)].EntireRow.Delete();
 
         Save();
+    }
+
+    /// <summary>
+    /// Turns a single row or column into the span Excel wants: Range["B"] is not an
+    /// address, Range["B:B"] is. A value that is already a span is left alone.
+    /// </summary>
+    private static string Span(string value)
+    {
+        var trimmed = (value ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+            throw new ArgumentException("A row or column is required.", nameof(value));
+
+        return trimmed.Contains(':', StringComparison.Ordinal) ? trimmed : $"{trimmed}:{trimmed}";
     }
 
     /// <inheritdoc />
@@ -342,10 +348,11 @@ public sealed partial class ExcelWorkbook
         if (request.PrintGridlines != TrueFaleNoneEnum.None)
             setup.PrintGridlines = request.PrintGridlines == TrueFaleNoneEnum.True;
 
-        if (request.PrintZoom != TrueFaleNoneEnum.None)
-            setup.Zoom = request.PrintZoom == TrueFaleNoneEnum.True;
-
+        // Excel's Zoom is one setting with two meanings: a percentage, or False to hand
+        // scaling over to FitToPages. They are mutually exclusive, so setting a level
+        // implies the first and turning PrintZoom off means the second.
         if (request.ZoomLevel > 0) setup.Zoom = request.ZoomLevel;
+        else if (request.PrintZoom == TrueFaleNoneEnum.False) setup.Zoom = false;
 
         Save();
     }

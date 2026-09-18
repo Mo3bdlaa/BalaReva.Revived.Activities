@@ -25,5 +25,5 @@ public sealed class FreezeRows : BaseActivity
     /// <inheritdoc />
     protected override void ExecuteWork(
         CodeActivityContext context, IExcelWorkbook workbook, string sheetName)
-        => workbook.FreezeRows(sheetName, NoRows?.Get(context) ?? 1, FreezeOption);
+        => workbook.FreezeRows(sheetName, NoRows?.Get(context) ?? 0, FreezeOption);
 }

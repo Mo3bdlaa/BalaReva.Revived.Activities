@@ -69,7 +69,7 @@ public sealed class ChartEmbedToPowerPoint : BaseActivity
                 ChartIndex = ChartIndex?.Get(context) ?? 0,
             },
             Require(context, PptFile, nameof(PptFile)),
-            SlideIndex?.Get(context) ?? 1,
+            SlideIndex?.Get(context) ?? 0,
             new ChartBounds
             {
                 Left = ChartLeft?.Get(context) ?? 0,

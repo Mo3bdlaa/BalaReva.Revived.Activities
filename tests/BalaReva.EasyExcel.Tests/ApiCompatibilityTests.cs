@@ -28,7 +28,9 @@ public class ApiCompatibilityTests
 
     [Fact]
     public void The_recorded_surface_was_actually_loaded() =>
-        Assert.Equal(77, PublishedSurface.Activities(PackageId).Count);
+        // 77 concrete activities plus the four abstract bases they share, which the
+        // recording counts as activities too because a workflow binds their arguments.
+        Assert.Equal(81, PublishedSurface.Activities(PackageId).Count);
 
     [Fact]
     public void The_misspelled_enum_kept_its_name()

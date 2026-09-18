@@ -18,5 +18,7 @@ public sealed class RemoveFilter : BaseActivity
     /// <inheritdoc />
     protected override void ExecuteWork(
         CodeActivityContext context, IExcelWorkbook workbook, string sheetName)
-        => workbook.RemoveFilter(sheetName, TableIndex?.Get(context) ?? 1);
+        // An unset Table Index arrives as zero; the service treats that as the first
+        // table on the sheet.
+        => workbook.RemoveFilter(sheetName, TableIndex?.Get(context) ?? 0);
 }

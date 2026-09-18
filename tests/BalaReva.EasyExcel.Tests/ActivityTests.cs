@@ -269,9 +269,32 @@ public class ActivityTests
     {
         var service = new FakeExcelService();
 
-        Harness.Run(new HideUnhideEmptyRows { HideDelete = HideDeleteEnum.UnHide }, service);
+        Harness.Run(
+            new HideUnhideEmptyRows
+            {
+                StartRowIndex = new InArgument<long>(5),
+                HideDelete = HideDeleteEnum.UnHide,
+            },
+            service);
 
-        Assert.Contains("HideUnhideEmptyRows(,1,UnHide)", service.Calls);
+        Assert.Contains("HideUnhideEmptyRows(,5,UnHide)", service.Calls);
+    }
+
+    [Fact]
+    public void An_unset_row_or_index_argument_arrives_as_zero_and_the_service_clamps_it()
+    {
+        // Worth pinning: an unset InArgument of a value type reads back as default(T),
+        // not null, so an activity cannot give one a non-zero default by coalescing. The
+        // clamping is the service's job, and these pass zero through to prove it gets it.
+        var service = new FakeExcelService();
+
+        Harness.Run(new FindEmptyRows(), service);
+        Harness.Run(new FreezeRows(), service);
+        Harness.Run(new RemoveFilter(), service);
+
+        Assert.Contains("FindEmptyRows(,0)", service.Calls);
+        Assert.Contains("FreezeRows(,0,Freeze)", service.Calls);
+        Assert.Contains("RemoveFilter(,0)", service.Calls);
     }
 
     [Fact]
