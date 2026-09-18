@@ -3,7 +3,6 @@ using System.Activities.Statements;
 using System.ComponentModel;
 using BalaReva.EasyPowerPoint.Base;
 using BalaReva.EasyPowerPoint.Utilities;
-using Interop = Microsoft.Office.Interop.PowerPoint;
 
 namespace BalaReva.EasyPowerPoint.Scope.Main;
 
@@ -63,9 +62,8 @@ public sealed class PowerPointScope : BaseNative
             FilePath = path,
             Password = OpenPassword?.Get(context) ?? string.Empty,
             ModiPassword = ModifyPassword?.Get(context) ?? string.Empty,
-            // Null under a stand-in service, and under the real one when PowerPoint
-            // hands back something that is not a Presentation.
-            PptPersentation = presentation.ComPresentation as Interop.Presentation,
+            // Null under a stand-in service.
+            PptPersentation = presentation.ComPresentation,
         };
 
         if (Body is not null)

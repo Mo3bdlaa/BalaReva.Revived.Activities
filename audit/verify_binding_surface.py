@@ -22,6 +22,21 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 RECORDED = os.path.join(HERE, "data", "api-surface.json")
 
+# Differences we have decided to live with, each with the reason. Anything not listed
+# here is a failure. Keep this list short and keep the reasons specific: an entry is a
+# workflow that will not upgrade cleanly, and it should cost something to add one.
+ACCEPTED = {
+    ("BalaReva.EasyPowerPoint.Scope.Main.PowerPointObject", "PptPersentation"):
+        "Published as Microsoft.Office.Interop.PowerPoint.Presentation, declared here as "
+        "object. Every Office interop assembly on NuGet has a hard reference on 'office' "
+        "(Microsoft.Office.Core), which Microsoft publishes nowhere, so a member typed that "
+        "way makes the whole scope fail to load at run time rather than only this property. "
+        "A workflow reaching for the interop type has to cast.",
+    ("BalaReva.EasyExcel.Main.ExcelParam", "ExcelWorkBook"):
+        "Published as Microsoft.Office.Interop.Excel.Workbook, declared here as object, "
+        "for the same reason as PowerPointObject.PptPersentation above.",
+}
+
 
 def published_id(revived_id):
     """BalaReva.Revived.Excel.Activities -> BalaReva.Excel.Activities."""
@@ -71,6 +86,8 @@ def compare(published, ours):
         have = bindable(mine, full_name)
         for name, expected in bindable(theirs, full_name).items():
             actual = have.get(name)
+            if (full_name, name) in ACCEPTED:
+                continue
             if actual is None:
                 yield f"{full_name}.{name}: missing, was {expected}"
             elif actual != expected:
@@ -107,6 +124,10 @@ def main(argv):
                 print(f"  {line}")
         else:
             print(f"{revived_id}: binds the same as {original['Id']}")
+
+        for (type_name, member), reason in sorted(ACCEPTED.items()):
+            if type_name in binding_types(original) and type_name in binding_types(package):
+                print(f"  accepted: {type_name}.{member} - {reason}")
 
     if failed:
         print("\nWorkflows binding to the published names would break on these.")

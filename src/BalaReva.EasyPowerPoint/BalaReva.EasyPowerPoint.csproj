@@ -27,14 +27,13 @@
 
   <ItemGroup>
     <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
-    <!-- Referenced for one thing only: PowerPointObject.PptPersentation is a
-         Presentation in the published package, and a workflow binding that escape
-         hatch to a variable needs the same type. Nothing is *called* through it.
-         PowerPoint's object model is saturated with Microsoft.Office.Core types -
-         MsoTriState and friends - and Microsoft publishes no Office.dll on NuGet, so
-         PowerPointService drives the COM server late-bound through its ProgID
-         instead. See src/BalaReva.EasyPowerPoint/README.md. -->
-    <PackageReference Include="Microsoft.Office.Interop.PowerPoint" Version="15.0.4420.1018" />
+    <!-- No PowerPoint interop package, and the reason is worth keeping: referencing
+         one compiles, but every Office interop assembly on NuGet has a hard reference
+         on 'office' (Microsoft.Office.Core), which Microsoft does not publish anywhere.
+         The CLR resolves it the moment a Presentation-typed member is loaded, so the
+         package builds and then fails at run time with a FileNotFoundException. Driving
+         PowerPoint late-bound through its ProgID avoids the assembly entirely.
+         See src/BalaReva.EasyPowerPoint/README.md. -->
   </ItemGroup>
 
 </Project>

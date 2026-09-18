@@ -1,5 +1,3 @@
-using Interop = Microsoft.Office.Interop.PowerPoint;
-
 namespace BalaReva.EasyPowerPoint.Scope.Main;
 
 /// <summary>
@@ -25,9 +23,21 @@ public sealed class PowerPointObject
     /// activities and drive PowerPoint themselves.
     /// </summary>
     /// <remarks>
-    /// Null unless the scope is running against the real <see cref="PowerPointService"/>:
-    /// the service is late-bound, so this is the one place the interop type appears, and
-    /// it appears because the published package put it in the binding surface.
+    /// <para>
+    /// This is the one place the revived package cannot match the published one. There
+    /// it is a <c>Microsoft.Office.Interop.PowerPoint.Presentation</c>; here it is an
+    /// object, and a workflow that wants the interop type has to cast.
+    /// </para>
+    /// <para>
+    /// Declaring it as Presentation costs more than it buys. Every Office interop
+    /// assembly on NuGet has a hard reference on 'office' (Microsoft.Office.Core), which
+    /// Microsoft publishes nowhere, and the CLR goes looking for it as soon as it loads
+    /// a member typed that way. That is not a failure confined to this property: the
+    /// scope hands this object to its body, so the whole scope stops working on any
+    /// machine without office.dll. An object that needs a cast is better than a scope
+    /// that will not run.
+    /// </para>
+    /// <para>Null unless the scope is running against the real service.</para>
     /// </remarks>
-    public Interop.Presentation? PptPersentation { get; set; }
+    public object? PptPersentation { get; set; }
 }

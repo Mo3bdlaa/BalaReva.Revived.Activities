@@ -126,6 +126,27 @@ is a `Microsoft.Office.Interop.PowerPoint.Presentation`, `ExcelParam.ExcelWorkBo
 because it read the activities and not the plain classes beside them, which is why the
 check described under *Holding the surface* now walks every public type.
 
+**Neither can be reproduced, and the reason is worth writing down.** Every Office interop
+assembly published on NuGet has a hard reference on `office` (`Microsoft.Office.Core`),
+and Microsoft publishes that assembly nowhere: not on NuGet, not as a redistributable.
+Referencing the interop package compiles perfectly well, and then the CLR goes looking
+for `office.dll` as soon as it loads a member typed that way. Adding the PowerPoint
+interop reference to make `PptPersentation` match turned 26 passing tests into
+`Could not load file or assembly 'office'` — and not only on that property. The scope
+hands the object to its body, so the whole scope stopped loading.
+
+Both properties are therefore declared as `object`, and a workflow that wants the interop
+type casts. It is a real break in compatibility and it is recorded as such, in the
+`ACCEPTED` list in `audit/verify_binding_surface.py`, with the reason attached. The
+alternative was a package that builds and then will not run on a machine that has Office
+but not the PIAs, which is most machines since .NET dropped the GAC.
+
+This is also why `PowerPointService` is late-bound while `WordService` and `ExcelService`
+are not. Word and Excel never put an interop type in their binding surface, so nothing
+forces the CLR to load one until a workflow actually drives Office — at which point the
+machine that is running Office can be expected to resolve it. EasyPowerPoint and
+EasyExcel would have forced it at scope entry.
+
 Being free to choose is not the same as being able to, and for both packages done so
 far the activity lists settle it the other way.
 

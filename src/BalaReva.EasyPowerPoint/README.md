@@ -17,11 +17,19 @@ third-party repackage with the assembly sitting at the archive root, which is ex
 the provenance [docs/AUDIT.md](https://github.com/Mo3bdlaa/BalaReva.Revived.Activities/blob/main/docs/AUDIT.md)
 exists to flag. Late binding needs none of it.
 
-`Microsoft.Office.Interop.PowerPoint` is referenced for one thing only, and nothing is
-called through it: the published package exposes the live COM presentation on
-`PowerPointObject.PptPersentation`, and a workflow binding that escape hatch to a
-variable needs the same type. It is the same repackage family already used for the Word
-and Outlook activities here.
+**It carries no Office interop dependency at all**, and referencing one is not the easy
+fix it looks like. Every Office interop assembly on NuGet — PowerPoint's included — has a
+hard reference on `office` (`Microsoft.Office.Core`), which Microsoft publishes nowhere.
+The reference compiles; the CLR then goes looking for `office.dll` the moment it loads a
+member typed that way, and does not find it. Trying this cost a CI run: 26 tests failed
+with `Could not load file or assembly 'office'`, and not only on the property concerned —
+the scope hands that object to its body, so the scope itself stopped working.
+
+So one thing here does not match the published package: `PowerPointObject.PptPersentation`
+is a `Presentation` there and an `object` here. A workflow reaching for the live COM
+presentation has to cast. That is the whole of the difference, it is recorded as an
+accepted deviation in `audit/verify_binding_surface.py`, and it buys a scope that runs on
+a machine that has PowerPoint but not the Office PIAs — which is most of them.
 
 PowerPoint access sits behind `IPowerPointService` and `IPowerPointPresentation`, so a
 workflow can register its own implementation as an extension.
