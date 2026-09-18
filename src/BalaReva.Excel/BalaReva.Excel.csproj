@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- COM, for the same reason as Word. The binding surface leaks no Excel types, so
+         DocumentFormat.OpenXml was on the table, but the activity list is not: charts
+         built from XlChartType, InsertTableFormat's 61 XlRangeAutoFormat styles,
+         ExportWorkBook to PDF, ClipboardToDatatable and the AutoFit activities all need
+         Excel running. Serving half the package with OpenXML would be worse than being
+         honest about the dependency. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>BalaReva.Excel</RootNamespace>
+    <AssemblyName>BalaReva.Excel</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.Excel.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Excel Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      Excel activities for UiPath, reimplemented on .NET 8. Type and property names match
+      BalaReva.Excel.Activities 2021.1.0 so existing workflows keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <!-- Declared, not vendored, unlike the published package. -->
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="16.0.18925.20022" />
+  </ItemGroup>
+
+</Project>
