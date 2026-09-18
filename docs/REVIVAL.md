@@ -71,9 +71,12 @@ no amount of retargeting would change that without breaking compatibility.
 
 The Windows-only packages cannot run on a Linux agent at all: `System.Drawing.Common`
 throws there, and a `net8.0-windows` test host needs a Windows Desktop runtime that
-does not exist on Linux. So CI has two jobs. The Linux job builds everything (which
-works, via `EnableWindowsTargeting`), runs the EasyText suite, packs all eight and runs
-both package checks. The Windows job runs all eight suites.
+does not exist on Linux. So CI has two jobs. The Linux job builds everything (which works,
+via `EnableWindowsTargeting`), runs the four suites that need nothing but the runtime —
+EasyText, ZipUnzip, ZipUnzipGz and PostgreSql — packs all eleven packages and runs both
+package checks. The Windows job runs all eleven suites, the four from the Linux job
+included: the archive path checks compare paths case-insensitively on Windows and
+case-sensitively on Linux, so both are worth exercising.
 
 Printer talks to the spooler through `IPrinterService`, and EasyOutlook talks to the
 mailbox through `IOutlookService`; both register a stand-in as a workflow extension in
@@ -210,6 +213,83 @@ and they will still be unusable from a Cross-platform project. Where an activity
 be served by `DocumentFormat.OpenXml` instead of interop, that is worth doing on its
 own merits — no Office install, no COM lifetime problems, and it runs anywhere — but
 it is a larger change than a retarget and will not always be behaviour-identical.
+
+## The second pass: the three that carried advisories
+
+The eight packages above were chosen by runtime support. These three were chosen by
+severity: they are the ones the audit found with CVEs against their pinned dependencies.
+
+| Package | Activities | Advisories fixed |
+|---|---:|---|
+| `BalaReva.ZipUnzip.Activities` | 2 | CVE-2021-39208, CVE-2026-44788, CVE-2021-32840, CVE-2021-32842, CVE-2018-1002205 |
+| `BalaReva.ZipUnzipGz.Activities` | 1 | CVE-2021-32840, CVE-2021-32842 |
+| `BalaReva.PostgreSql.Activities` | 4 | CVE-2024-32655 |
+
+All three shipped their assemblies straight into `lib/` with no target framework folder at
+all, which is why the audit classed them Legacy-only. All three now target plain `net8.0`,
+so alongside EasyText they are the packages here that work in a Studio *Cross-platform*
+project.
+
+### Why a version bump was not the fix
+
+Every archive advisory in that table is the same bug. **Zip slip**: an archive entry named
+`../../etc/passwd`, or `/etc/passwd`, or `C:\Windows\evil.dll`, joined to the destination
+folder by a library that never checks where the result lands. It has recurred in
+SharpCompress once, in SharpZipLib twice, and in DotNetZip it has been open since 2018
+because nobody has maintained that package since 2011.
+
+Current versions defend themselves. These packages check anyway, because the class of bug
+has come back in every one of those libraries at least once, and because it means an
+advisory against a future version of a dependency is not automatically an advisory against
+these activities. Extraction goes entry by entry, `SafeExtractPath.Resolve` decides where
+each entry is allowed to land, and anything outside the extraction folder is refused before
+a byte is written. One source file, shared by both archive packages, since it is the fix
+they exist for.
+
+Two details in that check are worth stating, because the obvious version of it is wrong:
+
+- The comparison is against the destination **plus a directory separator**. Without it,
+  extracting into `/tmp/out` would accept an entry resolving to `/tmp/outside/evil`, which
+  shares the prefix but is a different folder. There is a test for exactly that.
+- A `..` inside a path is not itself grounds for refusal. `a/../b.txt` resolves to
+  `b.txt`, which is inside the folder and perfectly honest. Refusing every entry containing
+  `..` is the lazy check and it breaks real archives.
+
+### Testing a security fix so that it can fail
+
+A test that passes for the wrong reason is worse than no test. The first version of these
+passed while proving nothing: SharpZipLib's **writer** sanitises entry names as it writes,
+stripping a leading slash, rewriting backslashes and dropping a UNC prefix, so an archive
+built with it carried `etc/passwd` rather than `/etc/passwd`. The extractor was refusing
+names that were never hostile.
+
+So `HostileZip` assembles the local file headers, the central directory and the end record
+itself, and whatever string it is given is what the extractor reads back — which is what an
+attacker's archive looks like. Tar needed none of this: `TarOutputStream` writes names
+unchanged.
+
+The check that makes them worth keeping: disabling `SafeExtractPath` turns **9 of the 11**
+slip tests red. Both archive packages are also extracted entry by entry rather than through
+`TarArchive.ExtractContents` or an equivalent, because those convenience methods are the
+ones the advisories were written against — they join the entry name to the destination
+themselves, which leaves no place to put the check.
+
+### What PostgreSQL kept
+
+`BaseData.Parameters` stays an `InArgument<NpgsqlParameter[]>`, and `BaseData` stays a
+concrete `CodeActivity` rather than an abstract base, both as published. Npgsql is an
+ordinary maintained package that resolves cleanly on `net8.0`, so unlike the Office interop
+assemblies there is no reason to weaken the type — the compromise recorded under *Holding
+the surface* does not need repeating here.
+
+Parameters are cloned into each command before execution. An `NpgsqlParameter` belongs to
+one command once it has been added to one, so a workflow reusing an array across two
+activities would otherwise hand over an object Npgsql already owns.
+
+`PostgreSqlService` is the one part of this slice with no test: no build agent has a
+database. Everything above it — argument validation, `ContinueOnError`, `Delay`, parameter
+passing, output mapping — is covered against a stand-in, and the service is kept to a
+mechanical translation for that reason.
 
 ## What changed in EasyText, deliberately
 
