@@ -188,9 +188,66 @@ public sealed class FakeWordService : IWordService, IWordDocument
 }
 
 /// <summary>Runs one in-scope activity inside a real WordScope over a stand-in session.</summary>
+/// <remarks>
+/// A child runs nested inside the scope, so its output arguments never reach the
+/// workflow root and <c>Invoke</c> returns nothing for them. Each one has to be routed
+/// into a variable and read back after the scope closes, which is what
+/// <see cref="ScopeRun"/> is for.
+/// </remarks>
 internal static class Harness
 {
     public static IDictionary<string, object> Run(
+        BaseNativeChild child, FakeWordService service, string filePath = @"C:\docs\test.docx") =>
+        new ScopeRun().Invoke(child, service, filePath).Values;
+
+    /// <summary>Runs a standalone activity, which needs no scope.</summary>
+    public static void RunStandalone(BaseWord activity, FakeWordService service)
+    {
+        activity.ContinueOnError ??= new InArgument<bool>(false);
+        var invoker = new WorkflowInvoker(activity);
+        invoker.Extensions.Add(service);
+        invoker.Invoke();
+    }
+}
+
+
+/// <summary>Whatever the captured output arguments held when the workflow finished.</summary>
+internal sealed class Outputs
+{
+    public Dictionary<string, object> Values { get; } = [];
+}
+
+/// <summary>Copies a workflow variable into <see cref="Outputs"/> once the scope is done.</summary>
+internal sealed class CaptureOutput<T>(Outputs sink, string name) : CodeActivity
+{
+    public InArgument<T> Value { get; set; } = null!;
+
+    protected override void Execute(CodeActivityContext context) =>
+        sink.Values[name] = context.GetValue(Value)!;
+}
+
+/// <summary>
+/// Builds a workflow that runs one activity inside a WordScope and reads its outputs.
+/// </summary>
+internal sealed class ScopeRun
+{
+    private readonly List<Variable> _variables = [];
+    private readonly List<Activity> _captures = [];
+    private readonly Outputs _outputs = new();
+
+    /// <summary>
+    /// Declares a variable for one of the child's output arguments and arranges for it
+    /// to be read back under <paramref name="name"/>.
+    /// </summary>
+    public OutArgument<T> Capture<T>(string name)
+    {
+        var variable = new Variable<T>();
+        _variables.Add(variable);
+        _captures.Add(new CaptureOutput<T>(_outputs, name) { Value = new InArgument<T>(variable) });
+        return new OutArgument<T>(variable);
+    }
+
+    public Outputs Invoke(
         BaseNativeChild child, FakeWordService service, string filePath = @"C:\docs\test.docx")
     {
         child.ContinueOnError ??= new InArgument<bool>(false);
@@ -207,17 +264,13 @@ internal static class Harness
             },
         };
 
-        var invoker = new WorkflowInvoker(scope);
-        invoker.Extensions.Add(service);
-        return invoker.Invoke();
-    }
+        var root = new Sequence { Variables = { }, Activities = { scope } };
+        foreach (var variable in _variables) root.Variables.Add(variable);
+        foreach (var capture in _captures) root.Activities.Add(capture);
 
-    /// <summary>Runs a standalone activity, which needs no scope.</summary>
-    public static void RunStandalone(BaseWord activity, FakeWordService service)
-    {
-        activity.ContinueOnError ??= new InArgument<bool>(false);
-        var invoker = new WorkflowInvoker(activity);
+        var invoker = new WorkflowInvoker(root);
         invoker.Extensions.Add(service);
         invoker.Invoke();
+        return _outputs;
     }
 }

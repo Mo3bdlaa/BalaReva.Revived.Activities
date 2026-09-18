@@ -78,11 +78,16 @@ public class ActivityTests
     public void ContinueOnError_reports_failure_instead_of_faulting()
     {
         var service = new FakeWordService { Throw = new InvalidOperationException("boom") };
-        var activity = new AddPageBreak { ContinueOnError = new InArgument<bool>(true) };
+        var run = new ScopeRun();
+        var activity = new AddPageBreak
+        {
+            ContinueOnError = new InArgument<bool>(true),
+            ExecutionResult = run.Capture<bool>("ExecutionResult"),
+        };
 
-        var outputs = Harness.Run(activity, service);
+        var outputs = run.Invoke(activity, service);
 
-        Assert.False((bool)outputs["ExecutionResult"]);
+        Assert.False((bool)outputs.Values["ExecutionResult"]);
     }
 
     [Fact]
@@ -94,13 +99,24 @@ public class ActivityTests
             Info = new WordTableInfo { TotalRows = 4, TotalColumns = 3, HasHeaderRow = true },
         };
 
-        var count = Harness.Run(new TableCount(), service);
-        var info = Harness.Run(new TableInfo { TableIndex = new InArgument<int>(2) }, service);
+        var countRun = new ScopeRun();
+        var count = countRun.Invoke(new TableCount { Result = countRun.Capture<int>("Result") }, service);
 
-        Assert.Equal(5, count["Result"]);
-        Assert.Equal(4, info["TotalRows"]);
-        Assert.Equal(3, info["TotalColumns"]);
-        Assert.True((bool)info["HasHeaderRow"]);
+        var infoRun = new ScopeRun();
+        var info = infoRun.Invoke(
+            new TableInfo
+            {
+                TableIndex = new InArgument<int>(2),
+                TotalRows = infoRun.Capture<int>("TotalRows"),
+                TotalColumns = infoRun.Capture<int>("TotalColumns"),
+                HasHeaderRow = infoRun.Capture<bool>("HasHeaderRow"),
+            },
+            service);
+
+        Assert.Equal(5, count.Values["Result"]);
+        Assert.Equal(4, info.Values["TotalRows"]);
+        Assert.Equal(3, info.Values["TotalColumns"]);
+        Assert.True((bool)info.Values["HasHeaderRow"]);
     }
 
     [Fact]
@@ -115,14 +131,25 @@ public class ActivityTests
             },
         };
 
-        var outputs = Harness.Run(new WordStatistics(), service);
+        var run = new ScopeRun();
+        var outputs = run.Invoke(
+            new WordStatistics
+            {
+                Pages = run.Capture<long>("Pages"),
+                WordCount = run.Capture<long>("WordCount"),
+                Lines = run.Capture<long>("Lines"),
+                Paragraphs = run.Capture<long>("Paragraphs"),
+                Characters = run.Capture<long>("Characters"),
+                CharactersWithSpaces = run.Capture<long>("CharactersWithSpaces"),
+            },
+            service);
 
-        Assert.Equal(12L, outputs["Pages"]);
-        Assert.Equal(3400L, outputs["WordCount"]);
-        Assert.Equal(500L, outputs["Lines"]);
-        Assert.Equal(90L, outputs["Paragraphs"]);
-        Assert.Equal(15000L, outputs["Characters"]);
-        Assert.Equal(18000L, outputs["CharactersWithSpaces"]);
+        Assert.Equal(12L, outputs.Values["Pages"]);
+        Assert.Equal(3400L, outputs.Values["WordCount"]);
+        Assert.Equal(500L, outputs.Values["Lines"]);
+        Assert.Equal(90L, outputs.Values["Paragraphs"]);
+        Assert.Equal(15000L, outputs.Values["Characters"]);
+        Assert.Equal(18000L, outputs.Values["CharactersWithSpaces"]);
     }
 
     [Fact]
@@ -236,13 +263,28 @@ public class ActivityTests
     {
         var service = new FakeWordService();
 
-        var byFont = Harness.Run(new ReadByFont { FontStyle = EnumBoldItalicUnderline.Bold }, service);
-        var byStyle = Harness.Run(
-            new ReadByStyle { ParagraphStyle = new InArgument<string>("Heading 1") }, service);
+        var fontRun = new ScopeRun();
+        var byFont = fontRun.Invoke(
+            new ReadByFont
+            {
+                FontStyle = EnumBoldItalicUnderline.Bold,
+                ResultArray = fontRun.Capture<string[]>("ResultArray"),
+                ResultTable = fontRun.Capture<DataTable>("ResultTable"),
+            },
+            service);
 
-        Assert.Equal(["bold text"], (string[])byFont["ResultArray"]);
-        Assert.Single(((DataTable)byFont["ResultTable"]).Rows);
-        Assert.Equal(["heading"], (string[])byStyle["ResultArray"]);
+        var styleRun = new ScopeRun();
+        var byStyle = styleRun.Invoke(
+            new ReadByStyle
+            {
+                ParagraphStyle = new InArgument<string>("Heading 1"),
+                ResultArray = styleRun.Capture<string[]>("ResultArray"),
+            },
+            service);
+
+        Assert.Equal(["bold text"], (string[])byFont.Values["ResultArray"]);
+        Assert.Single(((DataTable)byFont.Values["ResultTable"]).Rows);
+        Assert.Equal(["heading"], (string[])byStyle.Values["ResultArray"]);
         Assert.Contains("ReadByStyle(Heading 1)", service.Calls);
     }
 
@@ -251,9 +293,16 @@ public class ActivityTests
     {
         var service = new FakeWordService { HeaderFooterText = ["one", "two"] };
 
-        var outputs = Harness.Run(new ReadHeaderFooter { ReadType = EnumHeadersFooters.Footer }, service);
+        var run = new ScopeRun();
+        var outputs = run.Invoke(
+            new ReadHeaderFooter
+            {
+                ReadType = EnumHeadersFooters.Footer,
+                Result = run.Capture<string[]>("Result"),
+            },
+            service);
 
-        Assert.Equal(["one", "two"], (string[])outputs["Result"]);
+        Assert.Equal(["one", "two"], (string[])outputs.Values["Result"]);
         Assert.Contains("ReadHeaderFooter(Footer)", service.Calls);
     }
 
@@ -287,15 +336,17 @@ public class ActivityTests
     {
         var service = new FakeWordService { MacroResult = "done" };
 
-        var outputs = Harness.Run(
+        var run = new ScopeRun();
+        var outputs = run.Invoke(
             new ExecuteMacro
             {
                 MacroName = new InArgument<string>("Module1.Run"),
                 Parameters = new InArgument<object[]>(_ => new object[] { 1, "x" }),
+                MacroOutput = run.Capture<object>("MacroOutput"),
             },
             service);
 
-        Assert.Equal("done", outputs["MacroOutput"]);
+        Assert.Equal("done", outputs.Values["MacroOutput"]);
         Assert.Contains("ExecuteMacro(Module1.Run,[1,x])", service.Calls);
     }
 
