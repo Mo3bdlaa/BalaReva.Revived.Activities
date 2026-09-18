@@ -55,7 +55,12 @@ public sealed class FakeWordService : IWordService, IWordDocument
             Password = openPassword,
             ModiPassword = modifyPassword,
         };
-        return Record($"Open({filePath})", (IWordDocument)this);
+
+        // Deliberately does not honour Throw: that flag stands for a document operation
+        // failing, which is what ContinueOnError and the scope's fault path are about.
+        // Failing the open instead would mean neither ever runs.
+        Calls.Add($"Open({filePath})");
+        return this;
     }
 
     public void MergeDocuments(string wordFile, string openPassword, string modifyPassword,
