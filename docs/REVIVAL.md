@@ -21,10 +21,11 @@ So the process is:
 3. `ApiCompatibilityTests` checks the result back against the recorded surface, so
    a rename fails the build rather than a customer's workflow.
 
-## Scope of the current pass
+## Scope of this pass
 
-Targeting the eight packages that already ship .NET 6 assets, since .NET 6 left
-support on 2024-11-12. Between them they hold **262 concrete activities**:
+The eight packages that already ship .NET 6 assets, since .NET 6 left support on
+2024-11-12. Between them they hold **262 concrete activities**, and all eight are
+done:
 
 | Package | Activities | Target | Status |
 |---|---:|---|---|
@@ -71,8 +72,8 @@ no amount of retargeting would change that without breaking compatibility.
 The Windows-only packages cannot run on a Linux agent at all: `System.Drawing.Common`
 throws there, and a `net8.0-windows` test host needs a Windows Desktop runtime that
 does not exist on Linux. So CI has two jobs. The Linux job builds everything (which
-works, via `EnableWindowsTargeting`) and runs the EasyText suite. The Windows job runs
-all three suites.
+works, via `EnableWindowsTargeting`), runs the EasyText suite, packs all eight and runs
+both package checks. The Windows job runs all eight suites.
 
 Printer talks to the spooler through `IPrinterService`, and EasyOutlook talks to the
 mailbox through `IOutlookService`; both register a stand-in as a workflow extension in
@@ -83,13 +84,19 @@ arguments, `ContinueOnError`, output mapping — sits on this side of that bound
 Windows implementation behind it is a thin translation, and is the part that a real
 machine has to vouch for.
 
-**The Office-bound packages are the sharpest cases of this and deserve stating plainly:
-no CI agent has Outlook, Word or Excel installed, so `OutlookService`, `WordService` and
-`ExcelService` — the entire COM half of those packages — are not covered by any
-automated test.** It compiles, and the activity layer above it is
-well covered, but its behaviour against a real mailbox is unverified. The same will be
-true of the Office-bound packages still to come, and it is why the COM layer is kept to
-a mechanical translation with every judgement pushed up into the activities.
+**The five Office-bound packages are the sharpest cases of this and deserve stating
+plainly: no CI agent has Outlook, Word, Excel or PowerPoint installed, so
+`OutlookService`, `WordService`, `ExcelService`, `PowerPointService` and `ExcelWorkbook`
+— the entire COM half of those packages — are not covered by any automated test.** It
+compiles, and the activity layer above it is well covered, but its behaviour against a
+real mailbox or workbook is unverified. That is why the COM layer is kept to a
+mechanical translation with every judgement pushed up into the activities.
+
+`OpenXmlReader`, in EasyExcel, is the one exception: it reads the workbook's Open XML
+package rather than driving Excel, so its tests write real `.xlsx` files and read them
+back. They still only run on the Windows job, because the package targets
+`net8.0-windows` and so does its test assembly — the code is portable, the test host is
+not.
 
 ### Holding the surface
 
