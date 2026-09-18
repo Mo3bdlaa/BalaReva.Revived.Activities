@@ -76,8 +76,8 @@ names and signatures only, never method bodies — and the reimplementation is c
 back against that recording on every build. Rename a property and the build fails
 instead of someone's workflow.
 
-The current pass targets the eight packages that ship .NET 6 assets, since .NET 6 is out
-of support. Between them they hold **262 concrete activities**:
+This pass targeted the eight packages that ship .NET 6 assets, since .NET 6 is out of
+support. Between them they hold **262 concrete activities**, and all eight are done:
 
 | Package | Activities | Target | Status |
 |---|---:|---|---|
@@ -88,25 +88,26 @@ of support. Between them they hold **262 concrete activities**:
 | `BalaReva.Excel.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Word.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyPowerPoint.Activities` | 56 | `net8.0-windows` | ✅ Reimplemented |
-| `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
+| `BalaReva.EasyExcel.Activities` | 77 | `net8.0-windows` | ✅ Reimplemented |
 
 EasyText moved to plain `net8.0`, so it now works in Cross-platform projects too —
-something the original could not do. The other three cannot follow it, and not for want
+something the original could not do. The other seven cannot follow it, and not for want
 of effort: their **binding surfaces are made of Windows types**. EasyImage takes a
 `Font`, a `Color`, a `Point` and a `RotateFlipType` as arguments; Printer's
 `PrinterStatus` is `System.Printing.PrintQueue` member for member; EasyOutlook hands
-back a live `Microsoft.Office.Interop.Outlook.MailItem`. Substituting a portable library
-would break the very workflows these packages exist to keep working, so all three target
-`net8.0-windows`.
+back a live `Microsoft.Office.Interop.Outlook.MailItem`; `SetBorder` in EasyExcel binds
+an `XlLineStyle`. Substituting a portable library would break the very workflows these
+packages exist to keep working.
 
-EasyOutlook also carries a caveat worth reading before trusting it: **no build agent has
-Outlook installed, so its COM layer is not covered by any automated test.** The activity
-layer above it is, through a stand-in session.
+The five Office-bound packages carry a caveat worth reading before trusting them: **no
+build agent has Outlook, Word, Excel or PowerPoint installed, so their COM layers are not
+covered by any automated test.** The activity layers above them are, through recording
+stand-ins, and the COM code is kept to a mechanical translation for that reason.
 
 That splits CI in two. Everything builds on Linux via `EnableWindowsTargeting`, but
-`System.Drawing` throws there and a `net8.0-windows` test host needs a runtime Linux
-does not have — so the Linux job runs the EasyText suite and the Windows job runs all
-four.
+`System.Drawing` throws there and a `net8.0-windows` test host needs a runtime Linux does
+not have — so the Linux job builds everything, runs the EasyText suite, packs all eight
+and checks the packages; the Windows job runs all eight suites.
 
 [docs/REVIVAL.md](docs/REVIVAL.md) covers the approach, and records the behavioural
 decisions that metadata could not settle — line numbering chief among them.
@@ -117,10 +118,21 @@ decisions that metadata could not settle — line numbering chief among them.
 dotnet build BalaReva.Revived.sln -c Release
 dotnet test  BalaReva.Revived.sln -c Release
 dotnet pack  src/BalaReva.EasyText/BalaReva.EasyText.csproj -c Release -o artifacts
+
 python3 audit/verify_package_layout.py 'artifacts/*.nupkg'
+
+dotnet run --project tools/ApiSurface -c Release -- artifacts artifacts/surface.json
+python3 audit/verify_binding_surface.py artifacts/surface.json
 ```
 
-That last step is the audit's own PE reader pointed at our output: it fails a package
-whose `lib/<tfm>/` folder disagrees with what its assemblies target, which is exactly
-the defect found in `BalaReva.EasyDataTable.Activities` 5.0.0. CI runs it on every
-build.
+The last two steps are the audit's own tooling pointed back at our output, and CI runs
+both on every build.
+
+`verify_package_layout.py` fails a package whose `lib/<tfm>/` folder disagrees with what
+its assemblies target, which is exactly the defect found in
+`BalaReva.EasyDataTable.Activities` 5.0.0.
+
+`verify_binding_surface.py` reads type, property and enum names out of the built
+`.nupkg` and holds them against the surface recorded off the gallery, so a rename or a
+retyped argument fails here rather than in somebody's process. It found 44 of them in
+EasyPowerPoint in one run.

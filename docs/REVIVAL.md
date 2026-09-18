@@ -35,7 +35,7 @@ support on 2024-11-12. Between them they hold **262 concrete activities**:
 | `BalaReva.Excel.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Word.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyPowerPoint.Activities` | 56 | `net8.0-windows` | ✅ Reimplemented |
-| `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
+| `BalaReva.EasyExcel.Activities` | 77 | `net8.0-windows` | ✅ Reimplemented |
 
 EasyText went first because it is the only one of the eight with no Windows
 dependency at all, which means its behaviour can be executed and asserted on any
@@ -166,6 +166,33 @@ quietly doing nothing: `ImageExtract` and `ExtractHeaderFooterImages` round-trip
 images through the Windows clipboard in the published package, and reproducing that
 would mean pulling WinForms into a document package. The exception says so and points
 here.
+
+### What EasyExcel keeps out of Excel's way
+
+EasyExcel is the largest of the eight, at 77 activities and 27 enums, and it is the only
+one where part of the published package deliberately avoids Office altogether.
+
+`GetHiddenRows` and `GetHiddenColumns` sit on their own base, `BaseOpenXml`, carry their
+own file path rather than relying on a scope, and read the workbook's Open XML package
+through `DocumentFormat.OpenXml`. That is how the published package had it, and it is
+worth keeping: those two activities work on a machine with no Excel at all. The
+dependency moved from the pinned 2.20.0 to 3.5.1.
+
+`GetColumnName` and `GetColumnNumber` need nothing whatever. They convert between a
+column number and Excel's column letters, which is bijective base-26 — there is no zero
+digit, so A is 1 and Z is 26, and AA follows Z rather than A0. Both directions are
+tested against the boundaries where that distinction shows up: 26/27, 702/703.
+
+`OpenXmlReader` is the one piece of Office-adjacent code in the family with real tests:
+they write `.xlsx` files with hidden rows and hidden column spans and read them back. One
+of them deletes the file afterwards, which is the check that the reader detaches the
+worksheet from its package rather than holding the file open.
+
+Everything else is COM, and the interop constraint bites here in a second place: several
+Excel members are typed in terms of `Microsoft.Office.Core` — `AutomationSecurity`,
+`CommandBars.AdaptiveMenus`, `Shape.Type` and `LockAspectRatio`. Those four go through
+`dynamic` with the numbers named in `Mso`, exactly as the whole of EasyPowerPoint does.
+`ChartEmbedToPowerPoint` drives PowerPoint late-bound for the same reason.
 
 ### A note on the Office-bound packages
 
