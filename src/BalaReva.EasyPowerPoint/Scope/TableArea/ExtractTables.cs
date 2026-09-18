@@ -14,9 +14,10 @@ public sealed class ExtractTables : BaseSlideNativeChild
     [Category("Output")]
     [DisplayName("Output Tables")]
     [Description("One DataTable per table on the slide.")]
-    public OutArgument<DataSet> OutputTables { get; set; } = null!;
+    public OutArgument<DataTable[]> OutputTables { get; set; } = null!;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
-        => OutputTables.Set(context, presentation.ExtractTables(SlideIndex.Get(context)));
+        => OutputTables.Set(
+            context, presentation.ExtractTables([SlideIndex.Get(context)], hasHeader: false));
 }

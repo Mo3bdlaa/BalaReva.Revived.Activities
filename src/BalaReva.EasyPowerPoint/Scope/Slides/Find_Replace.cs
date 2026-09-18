@@ -35,19 +35,19 @@ public sealed class Find_Replace : BaseNativeChild
     [Category("Input")]
     [DisplayName("Match Case")]
     [Description("Whether the search is case sensitive.")]
-    public InArgument<bool> MatchCase { get; set; } = null!;
+    public bool MatchCase { get; set; }
 
     /// <summary>Match whole words only.</summary>
     [Category("Input")]
     [DisplayName("Whole Word")]
     [Description("Match whole words only.")]
-    public InArgument<bool> WholeWord { get; set; } = null!;
+    public bool WholeWord { get; set; }
 
     /// <summary>Replace only the first match in each shape.</summary>
     [Category("Input")]
     [DisplayName("First Occurrence")]
     [Description("Replace only the first match in each shape.")]
-    public InArgument<bool> FirstOccurrence { get; set; } = null!;
+    public bool FirstOccurrence { get; set; }
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
@@ -55,7 +55,7 @@ public sealed class Find_Replace : BaseNativeChild
             SlideIndexes?.Get(context) ?? [],
             Require(context, FindText, nameof(FindText)),
             ReplaceText?.Get(context) ?? string.Empty,
-            MatchCase?.Get(context) ?? false,
-            WholeWord?.Get(context) ?? false,
-            FirstOccurrence?.Get(context) ?? false);
+            MatchCase,
+            WholeWord,
+            FirstOccurrence);
 }

@@ -41,6 +41,15 @@ jobs:
       - name: Verify package layout
         run: python3 audit/verify_package_layout.py 'artifacts/*.nupkg'
 
+      # A workflow binds by type name, property name and property type. This reads all
+      # three back out of what we just packed and holds them against the surface
+      # recorded off the gallery, so a rename or a retyped argument fails here rather
+      # than in somebody's process.
+      - name: Verify binding surface
+        run: |
+          dotnet run --project tools/ApiSurface -c Release -- artifacts artifacts/surface.json
+          python3 audit/verify_binding_surface.py artifacts/surface.json
+
       - uses: actions/upload-artifact@v4
         with:
           name: packages

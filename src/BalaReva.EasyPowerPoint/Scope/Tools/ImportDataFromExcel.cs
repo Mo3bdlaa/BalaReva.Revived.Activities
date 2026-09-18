@@ -34,9 +34,13 @@ public sealed class ImportDataFromExcel : BaseSlideNativeChild
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
-        => presentation.ImportDataFromExcel(
-            SlideIndex.Get(context),
-            Require(context, ExcelFile, nameof(ExcelFile)),
-            SheetName?.Get(context) ?? string.Empty,
-            CellRange?.Get(context) ?? string.Empty);
+    {
+        var excelFile = Require(context, ExcelFile, nameof(ExcelFile));
+
+        throw new NotSupportedException(
+            $"Importing from '{excelFile}' is not implemented. Reading the workbook needs the "
+            + "Excel object model, which this package deliberately does not depend on. Read the "
+            + "range with BalaReva.Revived.Excel.Activities and pass it to AddTable. "
+            + "See docs/REVIVAL.md.");
+    }
 }

@@ -67,7 +67,11 @@ public static class PublishedSurface
 
             var actual = revived.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
             Assert.True(actual is not null, $"{fullName}.{name} is missing.");
-            Assert.Equal(expected, Describe(actual!.PropertyType));
+
+            var described = Describe(actual!.PropertyType);
+            Assert.True(
+                expected == described,
+                $"{fullName}.{name} was {expected} in the published package, is now {described}.");
         }
     }
 

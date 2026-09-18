@@ -27,11 +27,14 @@
 
   <ItemGroup>
     <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
-    <!-- No PowerPoint interop package. Its object model is saturated with
-         Microsoft.Office.Core types - MsoTriState and friends - which Microsoft does
-         not publish on NuGet, and every package that does is a third-party repackage.
-         PowerPointService drives PowerPoint late-bound through its ProgID instead,
-         which needs no interop assembly at all. See docs/REVIVAL.md. -->
+    <!-- Referenced for one thing only: PowerPointObject.PptPersentation is a
+         Presentation in the published package, and a workflow binding that escape
+         hatch to a variable needs the same type. Nothing is *called* through it.
+         PowerPoint's object model is saturated with Microsoft.Office.Core types -
+         MsoTriState and friends - and Microsoft publishes no Office.dll on NuGet, so
+         PowerPointService drives the COM server late-bound through its ProgID
+         instead. See src/BalaReva.EasyPowerPoint/README.md. -->
+    <PackageReference Include="Microsoft.Office.Interop.PowerPoint" Version="15.0.4420.1018" />
   </ItemGroup>
 
 </Project>

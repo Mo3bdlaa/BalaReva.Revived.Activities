@@ -20,25 +20,25 @@ public sealed class PasteClipboard : BaseNativeChild
     [Category("Input")]
     [DisplayName("Object Left")]
     [Description("Distance from the left edge, in points. Zero leaves where it lands.")]
-    public InArgument<double> ObjectLeft { get; set; } = null!;
+    public InArgument<float> ObjectLeft { get; set; } = null!;
 
     /// <summary>Distance from the top edge, in points. Zero leaves where it lands.</summary>
     [Category("Input")]
     [DisplayName("Object Top")]
     [Description("Distance from the top edge, in points. Zero leaves where it lands.")]
-    public InArgument<double> ObjectTop { get; set; } = null!;
+    public InArgument<float> ObjectTop { get; set; } = null!;
 
     /// <summary>Width in points. Zero leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Object Width")]
     [Description("Width in points. Zero leaves it alone.")]
-    public InArgument<double> ObjectWidth { get; set; } = null!;
+    public InArgument<float> ObjectWidth { get; set; } = null!;
 
     /// <summary>Height in points. Zero leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Object Height")]
     [Description("Height in points. Zero leaves it alone.")]
-    public InArgument<double> ObjectHeight { get; set; } = null!;
+    public InArgument<float> ObjectHeight { get; set; } = null!;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)

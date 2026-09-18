@@ -76,25 +76,25 @@ public sealed class ChartFormat : BaseNativeChild
     [Category("Input")]
     [DisplayName("Chart Left")]
     [Description("Distance from the left edge of the slide, in points. Zero leaves it alone.")]
-    public InArgument<double> ChartLeft { get; set; } = null!;
+    public InArgument<float> ChartLeft { get; set; } = null!;
 
     /// <summary>Distance from the top edge of the slide, in points.</summary>
     [Category("Input")]
     [DisplayName("Chart Top")]
     [Description("Distance from the top edge of the slide, in points. Zero leaves it alone.")]
-    public InArgument<double> ChartTop { get; set; } = null!;
+    public InArgument<float> ChartTop { get; set; } = null!;
 
     /// <summary>Width in points.</summary>
     [Category("Input")]
     [DisplayName("Chart Width")]
     [Description("Width in points. Zero leaves it alone.")]
-    public InArgument<double> ChartWidth { get; set; } = null!;
+    public InArgument<float> ChartWidth { get; set; } = null!;
 
     /// <summary>Height in points.</summary>
     [Category("Input")]
     [DisplayName("Chart Height")]
     [Description("Height in points. Zero leaves it alone.")]
-    public InArgument<double> ChartHeight { get; set; } = null!;
+    public InArgument<float> ChartHeight { get; set; } = null!;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation) =>

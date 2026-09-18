@@ -6,7 +6,9 @@ using BalaReva.EasyPowerPoint.Scope.Chart;
 using BalaReva.EasyPowerPoint.Scope.Slides;
 using BalaReva.EasyPowerPoint.Scope.TableArea;
 using BalaReva.EasyPowerPoint.Scope.Tools;
+using BalaReva.EasyPowerPoint.Scope.Main;
 using BalaReva.EasyPowerPoint.Utilities;
+using BalaReva.PowerPoint;
 
 namespace BalaReva.EasyPowerPoint.Tests;
 
@@ -127,7 +129,7 @@ public class ActivityTests
             new ReadText
             {
                 SlideIndexes = new InArgument<int[]>(_ => new[] { 1, 2 }),
-                AddSlideIndex = new InArgument<bool>(true),
+                AddSlideIndex = true,
                 ResultArray = run.Capture<string[]>("ResultArray"),
                 ResultString = run.Capture<string>("ResultString"),
             },
@@ -166,9 +168,9 @@ public class ActivityTests
             {
                 FindText = new InArgument<string>("old"),
                 ReplaceText = new InArgument<string>("new"),
-                MatchCase = new InArgument<bool>(true),
-                WholeWord = new InArgument<bool>(true),
-                FirstOccurrence = new InArgument<bool>(true),
+                MatchCase = true,
+                WholeWord = true,
+                FirstOccurrence = true,
             },
             service);
 
@@ -311,15 +313,16 @@ public class ActivityTests
             {
                 SlideIndex = new InArgument<int>(1),
                 TableName = new InArgument<string>("Sales"),
-                HeaderRow = true,
-                BandedRows = true,
+                HeaderRow = TrueFalseNoneEnum.True,
+                BandedRows = TrueFalseNoneEnum.True,
             },
             service);
 
         var options = Assert.IsType<TableStyleOptions>(service.LastStyle);
-        Assert.True(options.HeaderRow);
-        Assert.True(options.BandedRows);
-        Assert.False(options.TotalRow);
+        Assert.Equal(TrueFalseNoneEnum.True, options.HeaderRow);
+        Assert.Equal(TrueFalseNoneEnum.True, options.BandedRows);
+        // Left unset, so it stays None: the table keeps whatever it already had.
+        Assert.Equal(TrueFalseNoneEnum.None, options.TotalRow);
     }
 
     [Fact]
@@ -339,7 +342,7 @@ public class ActivityTests
             {
                 SlideIndex = new InArgument<int>(2),
                 ChartIndex = new InArgument<int>(1),
-                ChartWidth = new InArgument<double>(300),
+                ChartWidth = new InArgument<float>(300),
             },
             service);
 
@@ -371,13 +374,13 @@ public class ActivityTests
             {
                 NumberOfCopies = new InArgument<int>(3),
                 PrintColorType = PrintColorTypeEnum.PrintBlackAndWhite,
-                PrintHiddenSlides = new InArgument<bool>(true),
+                PrintHiddenSlides = TrueFalseNoneEnum.True,
             },
             service);
 
         Assert.Contains(@"ExportPdf(C:\out\deck.pdf,Screen)", service.Calls);
         Assert.Contains(@"SaveAs(C:\out\deck.odp,OpenDocumentPresentation)", service.Calls);
-        Assert.Contains("Print(3,PrintBlackAndWhite,False,True)", service.Calls);
+        Assert.Contains("Print(3,PrintBlackAndWhite,None,True)", service.Calls);
     }
 
     [Fact]
@@ -393,7 +396,8 @@ public class ActivityTests
     public void The_Excel_bridging_activities_say_plainly_that_they_are_not_implemented()
     {
         // Both would need the Excel object model, which this package deliberately does
-        // not depend on. They throw rather than quietly doing nothing.
+        // not depend on. They throw rather than quietly doing nothing, and they do it in
+        // the activity, so the refusal holds whichever service is behind them.
         var service = new FakePowerPointService();
 
         var export = Assert.ThrowsAny<Exception>(() => Harness.Run(
@@ -406,6 +410,199 @@ public class ActivityTests
             service));
 
         Assert.Contains("not implemented", Unwrap(export).Message, StringComparison.OrdinalIgnoreCase);
+
+        // The table still reaches the clipboard, which is the route it leaves open.
+        Assert.Contains(service.Calls, call => call.StartsWith("TableCopyToClipboard"));
+
+        var import = Assert.ThrowsAny<Exception>(() => Harness.Run(
+            new ImportDataFromExcel
+            {
+                SlideIndex = new InArgument<int>(1),
+                ExcelFile = new InArgument<string>(@"C:\out\book.xlsx"),
+            },
+            new FakePowerPointService()));
+
+        Assert.Contains("not implemented", Unwrap(import).Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // The activities below carry the property types the published package declared, which
+    // are not the obvious ones: arrays where a single value would do, three-state enums
+    // where a bool would do, and design-time properties where an argument would do. Each
+    // of these got it wrong first time round, so each has a test.
+
+    [Fact]
+    public void The_scope_hands_its_body_the_file_it_opened()
+    {
+        var service = new FakePowerPointService();
+
+        var scope = new PowerPointScope
+        {
+            FilePath = new InArgument<string>(@"C:\decks\deck.pptx"),
+            OpenPassword = new InArgument<string>("open"),
+            ModifyPassword = new InArgument<string>("modify"),
+        };
+
+        var argument = new DelegateInArgument<PowerPointObject> { Name = "PowerPointPresentation" };
+        var captured = new Outputs();
+        scope.Body = new ActivityAction<PowerPointObject>
+        {
+            Argument = argument,
+            Handler = new CaptureOutput<PowerPointObject>(captured, "Body")
+            {
+                Value = new InArgument<PowerPointObject>(argument),
+            },
+        };
+
+        var invoker = new WorkflowInvoker(scope);
+        invoker.Extensions.Add(service);
+        invoker.Invoke();
+
+        var target = Assert.IsType<PowerPointObject>(captured.Values["Body"]);
+        Assert.Equal(@"C:\decks\deck.pptx", target.FilePath);
+        Assert.Equal("open", target.Password);
+        Assert.Equal("modify", target.ModiPassword);
+        // Null behind a stand-in: there is no COM presentation to hand over.
+        Assert.Null(target.PptPersentation);
+    }
+
+    [Fact]
+    public void SlideExtractor_reports_the_slide_text_shapes()
+    {
+        var service = new FakePowerPointService();
+        var run = new ScopeRun();
+
+        var outputs = run.Invoke(
+            new SlideExtractor
+            {
+                SlideIndex = new InArgument<int>(2),
+                SlideResult = run.Capture<SlideObject>("SlideResult"),
+            },
+            service);
+
+        var slide = Assert.IsType<SlideObject>(outputs.Values["SlideResult"]);
+        var shape = Assert.Single(slide.TextShapes);
+        Assert.Equal("slide 2", shape.Text);
+        Assert.Equal(300, shape.BoundWidth);
+        Assert.Equal("Calibri", shape.TextShapeFont.Name);
+        Assert.True(shape.TextShapeFont.Bold);
+    }
+
+    [Fact]
+    public void FindText_reports_the_slides_it_matched_on()
+    {
+        var service = new FakePowerPointService();
+        var run = new ScopeRun();
+
+        var outputs = run.Invoke(
+            new FindText
+            {
+                SlideIndexes = new InArgument<int[]>(_ => new[] { 1, 2, 5 }),
+                FindString = new InArgument<string>("total"),
+                MatchCase = true,
+                WholeWord = true,
+                ResultArray = run.Capture<int[]>("ResultArray"),
+                ResultTable = run.Capture<DataTable>("ResultTable"),
+            },
+            service);
+
+        Assert.Contains("FindText([1,2,5],total,True,True)", service.Calls);
+        Assert.Equal(new[] { 2, 5 }, Assert.IsType<int[]>(outputs.Values["ResultArray"]));
+    }
+
+    [Fact]
+    public void CommentsRead_reports_one_entry_per_comment()
+    {
+        var service = new FakePowerPointService();
+        var run = new ScopeRun();
+
+        var outputs = run.Invoke(
+            new CommentsRead
+            {
+                SlideIndex = new InArgument<int>(1),
+                IncludeReplies = true,
+                Result = run.Capture<string[]>("Result"),
+                ResultTable = run.Capture<DataTable>("ResultTable"),
+            },
+            service);
+
+        Assert.Contains("CommentsRead(1,replies=True)", service.Calls);
+        Assert.Equal(
+            new[] { "alice: nice", "bob: agreed" },
+            Assert.IsType<string[]>(outputs.Values["Result"]));
+    }
+
+    [Fact]
+    public void ReadTables_reads_several_slides_and_passes_its_header_flag_through()
+    {
+        var service = new FakePowerPointService();
+        var run = new ScopeRun();
+
+        var outputs = run.Invoke(
+            new ReadTables
+            {
+                SlideIndex = new InArgument<int[]>(_ => new[] { 1, 3 }),
+                HasHeader = true,
+                ResultSet = run.Capture<DataSet>("ResultSet"),
+            },
+            service);
+
+        Assert.Contains("ExtractTables([1,3],header=True)", service.Calls);
+        Assert.True(service.LastHasHeader);
+        Assert.Equal(2, Assert.IsType<DataSet>(outputs.Values["ResultSet"]).Tables.Count);
+    }
+
+    [Fact]
+    public void ExtractTables_reports_an_array_for_the_one_slide_it_is_given()
+    {
+        var service = new FakePowerPointService();
+        var run = new ScopeRun();
+
+        var outputs = run.Invoke(
+            new ExtractTables
+            {
+                SlideIndex = new InArgument<int>(4),
+                OutputTables = run.Capture<DataTable[]>("OutputTables"),
+            },
+            service);
+
+        Assert.Contains("ExtractTables([4],header=False)", service.Calls);
+        Assert.Equal(2, Assert.IsType<DataTable[]>(outputs.Values["OutputTables"]).Length);
+    }
+
+    [Fact]
+    public void RefreshData_takes_the_shorts_the_published_package_declared()
+    {
+        var service = new FakePowerPointService();
+
+        Harness.Run(
+            new RefreshData { SlideIndex = new InArgument<short[]>(_ => new short[] { 2, 4 }) },
+            service);
+
+        Assert.Contains("RefreshData([2,4])", service.Calls);
+    }
+
+    [Fact]
+    public void TextShapeEdit_forwards_the_whole_shape_it_was_given()
+    {
+        var service = new FakePowerPointService();
+        var wanted = new TextShape
+        {
+            Text = "Revenue",
+            BoundLeft = 40,
+            TextShapeFont = new ShapeFont { Name = "Arial", Size = 24, Underline = true },
+        };
+
+        Harness.Run(
+            new TextShapeEdit
+            {
+                SlideIndex = new InArgument<int>(1),
+                TextIndex = new InArgument<int>(2),
+                TextStyle = new InArgument<TextShape>(_ => wanted),
+            },
+            service);
+
+        Assert.Same(wanted, service.LastTextShape);
+        Assert.Contains("TextShapeEdit(1,2)", service.Calls);
     }
 
     private static Exception Unwrap(Exception error) =>

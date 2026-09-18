@@ -19,13 +19,13 @@ public sealed class ReadText : BaseNativeChild
     [Category("Input")]
     [DisplayName("Add Slide Index")]
     [Description("Prefix each line with the slide it came from.")]
-    public InArgument<bool> AddSlideIndex { get; set; } = null!;
+    public bool AddSlideIndex { get; set; }
 
     /// <summary>Leave blank lines out.</summary>
     [Category("Input")]
     [DisplayName("Omit Empty Line")]
     [Description("Leave blank lines out.")]
-    public InArgument<bool> OmitEmptyLine { get; set; } = null!;
+    public bool OmitEmptyLine { get; set; }
 
     /// <summary>One entry per line of text.</summary>
     [Category("Output")]
@@ -44,8 +44,8 @@ public sealed class ReadText : BaseNativeChild
     {
         var (array, text) = presentation.ReadText(
             SlideIndexes?.Get(context) ?? [],
-            AddSlideIndex?.Get(context) ?? false,
-            OmitEmptyLine?.Get(context) ?? false);
+            AddSlideIndex,
+            OmitEmptyLine);
 
         ResultArray.Set(context, array);
         ResultString.Set(context, text);

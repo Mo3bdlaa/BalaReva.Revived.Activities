@@ -21,13 +21,13 @@ public sealed class CommentsRead : BaseNativeChild
     [Category("Input")]
     [DisplayName("Include Replies")]
     [Description("Include replies to each comment.")]
-    public InArgument<bool> IncludeReplies { get; set; } = null!;
+    public bool IncludeReplies { get; set; }
 
-    /// <summary>The comments, one per line.</summary>
+    /// <summary>The comments, one entry each.</summary>
     [Category("Output")]
     [DisplayName("Result")]
-    [Description("The comments, one per line.")]
-    public OutArgument<string> Result { get; set; } = null!;
+    [Description("The comments, one entry each.")]
+    public OutArgument<string[]> Result { get; set; } = null!;
 
     /// <summary>One row per comment, with its author and whether it is a reply.</summary>
     [Category("Output")]
@@ -38,10 +38,10 @@ public sealed class CommentsRead : BaseNativeChild
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
     {
-        var (text, table) = presentation.CommentsRead(
-            SlideIndex.Get(context), IncludeReplies?.Get(context) ?? false);
+        var (comments, table) = presentation.CommentsRead(
+            SlideIndex.Get(context), IncludeReplies);
 
-        Result.Set(context, text);
+        Result.Set(context, comments);
         ResultTable.Set(context, table);
     }
 }

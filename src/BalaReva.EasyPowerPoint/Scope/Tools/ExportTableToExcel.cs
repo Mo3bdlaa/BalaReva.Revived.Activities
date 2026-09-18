@@ -6,9 +6,9 @@ namespace BalaReva.EasyPowerPoint.Scope.Tools;
 
 /// <summary>Writes a slide table into a workbook.</summary>
 /// <remarks>
-/// Needs the Excel object model, which this package deliberately does not
-/// depend on, so it copies the table to the clipboard and then reports that
-/// the write is not implemented. See docs/REVIVAL.md.
+/// Needs the Excel object model, which this package deliberately does not depend on,
+/// so it copies the table to the clipboard and then says plainly that the write is not
+/// implemented rather than failing silently. See docs/REVIVAL.md.
 /// </remarks>
 [DisplayName("Export Table To Excel")]
 [Description("Writes a slide table into a workbook.")]
@@ -35,9 +35,16 @@ public sealed class ExportTableToExcel : BaseTableNativeChild
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
-        => presentation.ExportTableToExcel(
-            Table(context),
-            Require(context, ExcelFile, nameof(ExcelFile)),
-            SheetName?.Get(context) ?? string.Empty,
-            StartCell?.Get(context) ?? string.Empty);
+    {
+        var excelFile = Require(context, ExcelFile, nameof(ExcelFile));
+
+        // Put the table on the clipboard so the caller still has a route to the data.
+        presentation.TableCopyToClipboard(Table(context));
+
+        throw new NotSupportedException(
+            $"Exporting a table to '{excelFile}' is not implemented. Writing the workbook needs "
+            + "the Excel object model, which this package deliberately does not depend on. The "
+            + "table has been copied to the clipboard; use BalaReva.Revived.Excel.Activities to "
+            + "write it. See docs/REVIVAL.md.");
+    }
 }

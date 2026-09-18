@@ -22,23 +22,23 @@ public sealed class Print : BaseNativeChild
     [Description("Colour, black and white, or pure black and white.")]
     public PrintColorTypeEnum PrintColorType { get; set; } = PrintColorTypeEnum.PrintColor;
 
-    /// <summary>Print the comments too.</summary>
+    /// <summary>Print the comments too. None leaves the setting alone.</summary>
     [Category("Input")]
     [DisplayName("Print Comments")]
-    [Description("Print the comments too.")]
-    public InArgument<bool> PrintComments { get; set; } = null!;
+    [Description("Print the comments too. None leaves the setting alone.")]
+    public TrueFalseNoneEnum PrintComments { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Print hidden slides too.</summary>
+    /// <summary>Print hidden slides too. None leaves the setting alone.</summary>
     [Category("Input")]
     [DisplayName("Print Hidden Slides")]
-    [Description("Print hidden slides too.")]
-    public InArgument<bool> PrintHiddenSlides { get; set; } = null!;
+    [Description("Print hidden slides too. None leaves the setting alone.")]
+    public TrueFalseNoneEnum PrintHiddenSlides { get; set; } = TrueFalseNoneEnum.None;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
         => presentation.Print(
             NumberOfCopies?.Get(context) ?? 1,
             PrintColorType,
-            PrintComments?.Get(context) ?? false,
-            PrintHiddenSlides?.Get(context) ?? false);
+            PrintComments,
+            PrintHiddenSlides);
 }

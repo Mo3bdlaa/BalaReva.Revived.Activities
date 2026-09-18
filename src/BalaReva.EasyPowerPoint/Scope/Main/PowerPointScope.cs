@@ -3,6 +3,7 @@ using System.Activities.Statements;
 using System.ComponentModel;
 using BalaReva.EasyPowerPoint.Base;
 using BalaReva.EasyPowerPoint.Utilities;
+using Interop = Microsoft.Office.Interop.PowerPoint;
 
 namespace BalaReva.EasyPowerPoint.Scope.Main;
 
@@ -15,9 +16,9 @@ public sealed class PowerPointScope : BaseNative
 {
     /// <summary>Activities to run against the presentation.</summary>
     [Browsable(false)]
-    public ActivityAction<string> Body { get; set; } = new()
+    public ActivityAction<PowerPointObject> Body { get; set; } = new()
     {
-        Argument = new DelegateInArgument<string> { Name = "FilePath" },
+        Argument = new DelegateInArgument<PowerPointObject> { Name = "PowerPointPresentation" },
         Handler = new Sequence(),
     };
 
@@ -57,8 +58,18 @@ public sealed class PowerPointScope : BaseNative
         var handle = new PowerPointScopeHandle { Presentation = presentation };
         context.Properties.Add(handle.ExecutionPropertyName, handle);
 
+        var target = new PowerPointObject
+        {
+            FilePath = path,
+            Password = OpenPassword?.Get(context) ?? string.Empty,
+            ModiPassword = ModifyPassword?.Get(context) ?? string.Empty,
+            // Null under a stand-in service, and under the real one when PowerPoint
+            // hands back something that is not a Presentation.
+            PptPersentation = presentation.ComPresentation as Interop.Presentation,
+        };
+
         if (Body is not null)
-            context.ScheduleAction(Body, path, OnBodyComplete, OnBodyFault);
+            context.ScheduleAction(Body, target, OnBodyComplete, OnBodyFault);
     }
 
     private void OnBodyComplete(NativeActivityContext context, ActivityInstance instance) =>

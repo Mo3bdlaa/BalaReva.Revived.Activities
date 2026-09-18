@@ -1,49 +1,50 @@
 using System.Activities;
 using System.ComponentModel;
 using BalaReva.EasyPowerPoint.Base;
+using BalaReva.EasyPowerPoint.Utilities;
 
 namespace BalaReva.EasyPowerPoint.Scope.TableArea;
 
-/// <summary>Sets a table\u0027s banding and emphasis options.</summary>
+/// <summary>Sets a table's banding and emphasis options.</summary>
 [DisplayName("Style Option")]
-[Description("Sets a table\u0027s banding and emphasis options.")]
+[Description("Sets a table's banding and emphasis options.")]
 public sealed class StyleOption : BaseTableNativeChild
 {
-    /// <summary>Style the first row as a header.</summary>
+    /// <summary>Style the first row as a header. None leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Header Row")]
-    [Description("Style the first row as a header.")]
-    public bool HeaderRow { get; set; }
+    [Description("Style the first row as a header. None leaves it alone.")]
+    public TrueFalseNoneEnum HeaderRow { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Style the last row as a totals row.</summary>
+    /// <summary>Style the last row as a totals row. None leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Total Row")]
-    [Description("Style the last row as a totals row.")]
-    public bool TotalRow { get; set; }
+    [Description("Style the last row as a totals row. None leaves it alone.")]
+    public TrueFalseNoneEnum TotalRow { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Emphasise the first column.</summary>
+    /// <summary>Emphasise the first column. None leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("First Column")]
-    [Description("Emphasise the first column.")]
-    public bool FirstColumn { get; set; }
+    [Description("Emphasise the first column. None leaves it alone.")]
+    public TrueFalseNoneEnum FirstColumn { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Emphasise the last column.</summary>
+    /// <summary>Emphasise the last column. None leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Last Column")]
-    [Description("Emphasise the last column.")]
-    public bool LastColumn { get; set; }
+    [Description("Emphasise the last column. None leaves it alone.")]
+    public TrueFalseNoneEnum LastColumn { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Band the rows.</summary>
+    /// <summary>Band the rows. None leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Banded Rows")]
-    [Description("Band the rows.")]
-    public bool BandedRows { get; set; }
+    [Description("Band the rows. None leaves it alone.")]
+    public TrueFalseNoneEnum BandedRows { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Band the columns.</summary>
+    /// <summary>Band the columns. None leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Banded Columns")]
-    [Description("Band the columns.")]
-    public bool BandedColumns { get; set; }
+    [Description("Band the columns. None leaves it alone.")]
+    public TrueFalseNoneEnum BandedColumns { get; set; } = TrueFalseNoneEnum.None;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)

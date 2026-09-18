@@ -27,19 +27,19 @@ public sealed class FindText : BaseNativeChild
     [Category("Input")]
     [DisplayName("Match Case")]
     [Description("Whether the search is case sensitive.")]
-    public InArgument<bool> MatchCase { get; set; } = null!;
+    public bool MatchCase { get; set; }
 
     /// <summary>Match whole words only.</summary>
     [Category("Input")]
     [DisplayName("Whole Word")]
     [Description("Match whole words only.")]
-    public InArgument<bool> WholeWord { get; set; } = null!;
+    public bool WholeWord { get; set; }
 
-    /// <summary>The matching text, one entry each.</summary>
+    /// <summary>The slides the text was found on.</summary>
     [Category("Output")]
     [DisplayName("Result Array")]
-    [Description("The matching text, one entry each.")]
-    public OutArgument<string[]> ResultArray { get; set; } = null!;
+    [Description("The slides the text was found on, numbered from 1.")]
+    public OutArgument<int[]> ResultArray { get; set; } = null!;
 
     /// <summary>One row per match, with its slide and shape.</summary>
     [Category("Output")]
@@ -50,13 +50,13 @@ public sealed class FindText : BaseNativeChild
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
     {
-        var (array, table) = presentation.FindText(
+        var (slides, table) = presentation.FindText(
             SlideIndexes?.Get(context) ?? [],
             Require(context, FindString, nameof(FindString)),
-            MatchCase?.Get(context) ?? false,
-            WholeWord?.Get(context) ?? false);
+            MatchCase,
+            WholeWord);
 
-        ResultArray.Set(context, array);
+        ResultArray.Set(context, slides);
         ResultTable.Set(context, table);
     }
 }

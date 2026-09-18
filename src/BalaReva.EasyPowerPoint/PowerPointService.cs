@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using BalaReva.Easy.PowerPoint.Utilities;
 using BalaReva.EasyPowerPoint.Base;
 using BalaReva.EasyPowerPoint.Utilities;
+using BalaReva.PowerPoint;
 
 namespace BalaReva.EasyPowerPoint;
 
@@ -125,6 +126,9 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     /// <inheritdoc />
     public string FilePath { get; }
 
+    /// <inheritdoc />
+    public object? ComPresentation => _presentation;
+
     // ---------------------------------------------------------------- slides
 
     /// <inheritdoc />
@@ -163,14 +167,34 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     }
 
     /// <inheritdoc />
-    public string SlideExtractor(int slideIndex)
+    public SlideObject SlideExtractor(int slideIndex)
     {
-        var target = Path.Combine(
-            Path.GetDirectoryName(Path.GetFullPath(FilePath))!,
-            $"{Path.GetFileNameWithoutExtension(FilePath)}_Slide{slideIndex}.pptx");
-
-        Slide(slideIndex).Export(target, "PPTX");
-        return target;
+        var slide = new SlideObject();
+        foreach (var shape in TextShapes(slideIndex))
+        {
+            var range = shape.TextFrame.TextRange;
+            dynamic font = range.Font;
+            slide.TextShapes.Add(new TextShape
+            {
+                BoundHeight = (float)shape.Height,
+                BoundLeft = (float)shape.Left,
+                BoundTop = (float)shape.Top,
+                BoundWidth = (float)shape.Width,
+                Text = (string)range.Text ?? string.Empty,
+                TextShapeFont = new ShapeFont
+                {
+                    Bold = (int)font.Bold == Ppt.MsoTrue,
+                    Emboss = (int)font.Emboss == Ppt.MsoTrue,
+                    Italic = (int)font.Italic == Ppt.MsoTrue,
+                    Name = (string)font.Name ?? string.Empty,
+                    Size = (float)font.Size,
+                    Subscript = (int)font.Subscript == Ppt.MsoTrue,
+                    Superscript = (int)font.Superscript == Ppt.MsoTrue,
+                    Underline = (int)font.Underline == Ppt.MsoTrue,
+                },
+            });
+        }
+        return slide;
     }
 
     /// <inheritdoc />
@@ -228,13 +252,13 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     }
 
     /// <inheritdoc />
-    public (string[] Array, DataTable Table) FindText(int[] slideIndexes, string find,
-                                                      bool matchCase, bool wholeWord)
+    public (int[] SlideIndexes, DataTable Table) FindText(int[] slideIndexes, string find,
+                                                          bool matchCase, bool wholeWord)
     {
         if (string.IsNullOrEmpty(find))
             throw new ArgumentException("FindString is required.", nameof(find));
 
-        var matches = new List<string>();
+        var matched = new List<int>();
         var table = new DataTable("FindText");
         table.Columns.Add("SlideIndex", typeof(int));
         table.Columns.Add("ShapeName", typeof(string));
@@ -248,11 +272,11 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
                     find, 0, Ppt.Tri(matchCase), Ppt.Tri(wholeWord));
                 if (found is null) continue;
                 string text = found.Text;
-                matches.Add(text);
+                if (!matched.Contains(index)) matched.Add(index);
                 table.Rows.Add(index, (string)shape.Name, text);
             }
         }
-        return ([.. matches], table);
+        return ([.. matched], table);
     }
 
     /// <inheritdoc />
@@ -300,11 +324,21 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     }
 
     /// <inheritdoc />
-    public void TextShapeEdit(int slideIndex, int textIndex, TextStyleRequest style)
+    public void TextShapeEdit(int slideIndex, int textIndex, TextShape style)
     {
+        ArgumentNullException.ThrowIfNull(style);
         var shapes = TextShapes(slideIndex);
         Bounds(textIndex, shapes.Count, nameof(textIndex));
-        ApplyStyle(shapes[textIndex - 1].TextFrame.TextRange.Font, style);
+
+        var shape = shapes[textIndex - 1];
+        if (style.BoundLeft > 0) shape.Left = style.BoundLeft;
+        if (style.BoundTop > 0) shape.Top = style.BoundTop;
+        if (style.BoundWidth > 0) shape.Width = style.BoundWidth;
+        if (style.BoundHeight > 0) shape.Height = style.BoundHeight;
+
+        var range = shape.TextFrame.TextRange;
+        if (style.Text.Length > 0) range.Text = style.Text;
+        ApplyFont(range.Font, style.TextShapeFont);
         Save();
     }
 
@@ -444,9 +478,11 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     }
 
     /// <inheritdoc />
-    public void RefreshData(int slideIndex)
+    public void RefreshData(short[] slideIndexes)
     {
-        foreach (var shape in ChartShapes(slideIndex)) shape.Chart.Refresh();
+        foreach (var index in Targets([.. (slideIndexes ?? []).Select(i => (int)i)]))
+            foreach (var shape in ChartShapes(index))
+                shape.Chart.Refresh();
         Save();
     }
 
@@ -482,7 +518,7 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     }
 
     /// <inheritdoc />
-    public (string Text, DataTable Table) CommentsRead(int slideIndex, bool includeReplies)
+    public (string[] Comments, DataTable Table) CommentsRead(int slideIndex, bool includeReplies)
     {
         var table = new DataTable("Comments");
         table.Columns.Add("SlideIndex", typeof(int));
@@ -503,7 +539,7 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
                 lines.Add($"    {reply.Author}: {reply.Text}");
             }
         }
-        return (string.Join(Environment.NewLine, lines), table);
+        return ([.. lines], table);
     }
 
     // ---------------------------------------------------------------- tables
@@ -642,43 +678,76 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
     {
         ArgumentNullException.ThrowIfNull(options);
         var table = TableShape(reference).Table;
-        table.FirstRow = Ppt.Tri(options.HeaderRow);
-        table.LastRow = Ppt.Tri(options.TotalRow);
-        table.FirstCol = Ppt.Tri(options.FirstColumn);
-        table.LastCol = Ppt.Tri(options.LastColumn);
-        table.HorizBanding = Ppt.Tri(options.BandedRows);
-        table.VertBanding = Ppt.Tri(options.BandedColumns);
+
+        // None means "leave the table's own setting alone", so Set skips it.
+        Set(v => table.FirstRow = v, options.HeaderRow);
+        Set(v => table.LastRow = v, options.TotalRow);
+        Set(v => table.FirstCol = v, options.FirstColumn);
+        Set(v => table.LastCol = v, options.LastColumn);
+        Set(v => table.HorizBanding = v, options.BandedRows);
+        Set(v => table.VertBanding = v, options.BandedColumns);
         Save();
+
+        static void Set(Action<int> assign, TrueFalseNoneEnum value)
+        {
+            if (value != TrueFalseNoneEnum.None)
+                assign(Ppt.Tri(value == TrueFalseNoneEnum.True));
+        }
     }
 
     /// <inheritdoc />
     public void TableCopyToClipboard(TableRef reference) => TableShape(reference).Copy();
 
     /// <inheritdoc />
-    public DataSet ExtractTables(int slideIndex)
+    public DataTable[] ExtractTables(int[] slideIndexes, bool hasHeader)
     {
-        var set = new DataSet("SlideTables");
+        var extracted = new List<DataTable>();
         var index = 0;
-        foreach (var shape in TableShapes(slideIndex))
+        foreach (var slideIndex in Targets(slideIndexes))
         {
-            index++;
-            var table = shape.Table;
-            string name = shape.Name;
-            var data = new DataTable(string.IsNullOrWhiteSpace(name) ? $"Table{index}" : name);
-
-            var columns = (int)table.Columns.Count;
-            for (var c = 1; c <= columns; c++) data.Columns.Add($"Column{c}", typeof(string));
-            for (var r = 1; r <= (int)table.Rows.Count; r++)
+            foreach (var shape in TableShapes(slideIndex))
             {
-                var values = new object[columns];
-                for (var c = 1; c <= columns; c++)
-                    values[c - 1] = (string)table.Cell(r, c).Shape.TextFrame.TextRange.Text ?? string.Empty;
-                data.Rows.Add(values);
+                index++;
+                var table = shape.Table;
+                string name = shape.Name;
+                var data = new DataTable(string.IsNullOrWhiteSpace(name) ? $"Table{index}" : name);
+
+                var columns = (int)table.Columns.Count;
+                var rows = (int)table.Rows.Count;
+                var first = 1;
+
+                if (hasHeader && rows > 0)
+                {
+                    for (var c = 1; c <= columns; c++)
+                        data.Columns.Add(Heading(table, c), typeof(string));
+                    first = 2;
+                }
+                else
+                {
+                    for (var c = 1; c <= columns; c++) data.Columns.Add($"Column{c}", typeof(string));
+                }
+
+                for (var r = first; r <= rows; r++)
+                {
+                    var values = new object[columns];
+                    for (var c = 1; c <= columns; c++) values[c - 1] = Cell(table, r, c);
+                    data.Rows.Add(values);
+                }
+                extracted.Add(data);
             }
-            set.Tables.Add(data);
         }
-        return set;
+        return [.. extracted];
     }
+
+    /// <summary>A header cell's text, falling back to a positional name when it is blank.</summary>
+    private static string Heading(dynamic table, int column)
+    {
+        var text = Cell(table, 1, column);
+        return string.IsNullOrWhiteSpace(text) ? $"Column{column}" : text;
+    }
+
+    private static string Cell(dynamic table, int row, int column) =>
+        (string)table.Cell(row, column).Shape.TextFrame.TextRange.Text ?? string.Empty;
 
     /// <inheritdoc />
     public string[] GetTableNames(int slideIndex) =>
@@ -710,27 +779,6 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
         Save();
     }
 
-    /// <inheritdoc />
-    public void ExportTableToExcel(TableRef reference, string excelFile, string sheetName, string startCell)
-    {
-        // Put the table on the clipboard so the caller still has a route, then say
-        // plainly that the rest is not done rather than failing silently.
-        TableCopyToClipboard(reference);
-        throw new NotSupportedException(
-            $"Exporting a table to '{excelFile}' is not implemented. Writing the workbook needs "
-            + "the Excel object model, which this package deliberately does not depend on. The "
-            + "table has been copied to the clipboard; use BalaReva.Revived.Excel.Activities to "
-            + "write it. See docs/REVIVAL.md.");
-    }
-
-    /// <inheritdoc />
-    public void ImportDataFromExcel(int slideIndex, string excelFile, string sheetName, string cellRange) =>
-        throw new NotSupportedException(
-            $"Importing from '{excelFile}' is not implemented. Reading the workbook needs the "
-            + "Excel object model, which this package deliberately does not depend on. Read the "
-            + "range with BalaReva.Revived.Excel.Activities and pass it to AddTable. "
-            + "See docs/REVIVAL.md.");
-
     // ---------------------------------------------------------- presentation
 
     /// <inheritdoc />
@@ -753,14 +801,19 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
 
     /// <inheritdoc />
     public void Print(int numberOfCopies, PrintColorTypeEnum colorType,
-                      bool printComments, bool printHiddenSlides)
+                      TrueFalseNoneEnum printComments, TrueFalseNoneEnum printHiddenSlides)
     {
         var options = _presentation.PrintOptions;
         options.NumberOfCopies = Math.Max(numberOfCopies, 1);
         options.OutputType = Ppt.PrintOutputSlides;
         options.PrintColorType = (int)colorType;
-        options.PrintComments = Ppt.Tri(printComments);
-        options.PrintHiddenSlides = Ppt.Tri(printHiddenSlides);
+
+        // None means "leave the presentation's own setting alone".
+        if (printComments != TrueFalseNoneEnum.None)
+            options.PrintComments = Ppt.Tri(printComments == TrueFalseNoneEnum.True);
+        if (printHiddenSlides != TrueFalseNoneEnum.None)
+            options.PrintHiddenSlides = Ppt.Tri(printHiddenSlides == TrueFalseNoneEnum.True);
+
         _presentation.PrintOut();
     }
 
@@ -842,6 +895,20 @@ internal sealed class PowerPointPresentation : IPowerPointPresentation
 
         Bounds(reference.TableIndex, tables.Count, nameof(reference));
         return tables[reference.TableIndex - 1];
+    }
+
+    /// <summary>Applies a published <see cref="ShapeFont"/>, which is plainly boolean.</summary>
+    private static void ApplyFont(dynamic font, ShapeFont? shapeFont)
+    {
+        if (shapeFont is null) return;
+        if (!string.IsNullOrWhiteSpace(shapeFont.Name)) font.Name = shapeFont.Name;
+        if (shapeFont.Size > 0) font.Size = shapeFont.Size;
+        font.Bold = Ppt.Tri(shapeFont.Bold);
+        font.Emboss = Ppt.Tri(shapeFont.Emboss);
+        font.Italic = Ppt.Tri(shapeFont.Italic);
+        font.Subscript = Ppt.Tri(shapeFont.Subscript);
+        font.Superscript = Ppt.Tri(shapeFont.Superscript);
+        font.Underline = Ppt.Tri(shapeFont.Underline);
     }
 
     private static void ApplyStyle(dynamic font, TextStyleRequest? style)

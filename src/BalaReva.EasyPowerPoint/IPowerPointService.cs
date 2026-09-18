@@ -2,6 +2,7 @@ using System.Data;
 using BalaReva.Easy.PowerPoint.Utilities;
 using BalaReva.EasyPowerPoint.Base;
 using BalaReva.EasyPowerPoint.Utilities;
+using BalaReva.PowerPoint;
 
 namespace BalaReva.EasyPowerPoint;
 
@@ -25,6 +26,16 @@ public interface IPowerPointPresentation : IDisposable
     /// <summary>Full path of the open presentation.</summary>
     string FilePath { get; }
 
+    /// <summary>
+    /// The underlying COM presentation, or null when there is not one.
+    /// </summary>
+    /// <remarks>
+    /// Typed as object because this assembly drives PowerPoint late-bound; the scope
+    /// casts it to hand a workflow the interop type the published package exposed on
+    /// <c>PowerPointObject.PptPersentation</c>.
+    /// </remarks>
+    object? ComPresentation { get; }
+
     // slides
 
     /// <summary>Number of slides.</summary>
@@ -45,8 +56,8 @@ public interface IPowerPointPresentation : IDisposable
     /// <summary>Pastes the clipboard's slide after the given position.</summary>
     void SlidePaste(int slideIndex);
 
-    /// <summary>Saves one slide out as its own presentation.</summary>
-    string SlideExtractor(int slideIndex);
+    /// <summary>Reads a slide's text shapes: their text, font and position.</summary>
+    SlideObject SlideExtractor(int slideIndex);
 
     /// <summary>Shows or hides a slide during a slide show.</summary>
     void HideUnhideSlide(int slideIndex, HideUnhideEnum slideShow);
@@ -62,9 +73,9 @@ public interface IPowerPointPresentation : IDisposable
     /// <summary>Reads the text of the given slides.</summary>
     (string[] Array, string Text) ReadText(int[] slideIndexes, bool addSlideIndex, bool omitEmptyLine);
 
-    /// <summary>Finds text across the given slides.</summary>
-    (string[] Array, DataTable Table) FindText(int[] slideIndexes, string find,
-                                               bool matchCase, bool wholeWord);
+    /// <summary>Finds text across the given slides, reporting which slides matched.</summary>
+    (int[] SlideIndexes, DataTable Table) FindText(int[] slideIndexes, string find,
+                                                   bool matchCase, bool wholeWord);
 
     /// <summary>Replaces text across the given slides.</summary>
     void FindReplace(int[] slideIndexes, string find, string replace,
@@ -74,7 +85,7 @@ public interface IPowerPointPresentation : IDisposable
     void InsertTextBox(int slideIndex, TextBoxRequest request);
 
     /// <summary>Restyles one text shape on a slide.</summary>
-    void TextShapeEdit(int slideIndex, int textIndex, TextStyleRequest style);
+    void TextShapeEdit(int slideIndex, int textIndex, TextShape style);
 
     /// <summary>Number of text shapes on a slide.</summary>
     int TextShapeCount(int slideIndex);
@@ -117,8 +128,8 @@ public interface IPowerPointPresentation : IDisposable
     /// <summary>Saves a slide's charts as images.</summary>
     void ChartImageExtract(int slideIndex, string imageFolder, ImageFileFormatEnum format);
 
-    /// <summary>Refreshes the data behind a slide's charts.</summary>
-    void RefreshData(int slideIndex);
+    /// <summary>Refreshes the data behind the given slides' charts.</summary>
+    void RefreshData(short[] slideIndexes);
 
     /// <summary>Updates the presentation's linked objects.</summary>
     void UpdateLinks();
@@ -132,7 +143,7 @@ public interface IPowerPointPresentation : IDisposable
     void CommentsDelete(int slideIndex);
 
     /// <summary>Reads a slide's comments.</summary>
-    (string Text, DataTable Table) CommentsRead(int slideIndex, bool includeReplies);
+    (string[] Comments, DataTable Table) CommentsRead(int slideIndex, bool includeReplies);
 
     // tables
 
@@ -172,8 +183,8 @@ public interface IPowerPointPresentation : IDisposable
     /// <summary>Copies a table to the clipboard.</summary>
     void TableCopyToClipboard(TableRef table);
 
-    /// <summary>Every table on a slide, one DataTable each.</summary>
-    DataSet ExtractTables(int slideIndex);
+    /// <summary>Every table on the given slides, one DataTable each.</summary>
+    DataTable[] ExtractTables(int[] slideIndexes, bool hasHeader);
 
     /// <summary>Names of the table shapes on a slide.</summary>
     string[] GetTableNames(int slideIndex);
@@ -182,12 +193,6 @@ public interface IPowerPointPresentation : IDisposable
 
     /// <summary>Replaces placeholder text across slides from a dictionary.</summary>
     void DataTransformer(int[] slideIndexes, Dictionary<string, string> replacements);
-
-    /// <summary>Writes a slide's table into a workbook.</summary>
-    void ExportTableToExcel(TableRef table, string excelFile, string sheetName, string startCell);
-
-    /// <summary>Fills a slide from a range in a workbook.</summary>
-    void ImportDataFromExcel(int slideIndex, string excelFile, string sheetName, string cellRange);
 
     // presentation
 
@@ -199,7 +204,7 @@ public interface IPowerPointPresentation : IDisposable
 
     /// <summary>Prints the presentation.</summary>
     void Print(int numberOfCopies, PrintColorTypeEnum colorType,
-               bool printComments, bool printHiddenSlides);
+               TrueFalseNoneEnum printComments, TrueFalseNoneEnum printHiddenSlides);
 
     /// <summary>Strips document information of the given kind.</summary>
     void RemoveDocumentInformation(RemoveDocInfoTypeEnum docInfoType);
@@ -316,21 +321,21 @@ public sealed class AddTableRequest
 /// <remarks>Not part of the published surface; it keeps the service signatures readable.</remarks>
 public sealed class TableStyleOptions
 {
-    /// <summary>Style the first row as a header.</summary>
-    public bool HeaderRow { get; set; }
+    /// <summary>Style the first row as a header. None leaves it alone.</summary>
+    public TrueFalseNoneEnum HeaderRow { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Style the last row as a totals row.</summary>
-    public bool TotalRow { get; set; }
+    /// <summary>Style the last row as a totals row. None leaves it alone.</summary>
+    public TrueFalseNoneEnum TotalRow { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Emphasise the first column.</summary>
-    public bool FirstColumn { get; set; }
+    /// <summary>Emphasise the first column. None leaves it alone.</summary>
+    public TrueFalseNoneEnum FirstColumn { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Emphasise the last column.</summary>
-    public bool LastColumn { get; set; }
+    /// <summary>Emphasise the last column. None leaves it alone.</summary>
+    public TrueFalseNoneEnum LastColumn { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Band the rows.</summary>
-    public bool BandedRows { get; set; }
+    /// <summary>Band the rows. None leaves it alone.</summary>
+    public TrueFalseNoneEnum BandedRows { get; set; } = TrueFalseNoneEnum.None;
 
-    /// <summary>Band the columns.</summary>
-    public bool BandedColumns { get; set; }
+    /// <summary>Band the columns. None leaves it alone.</summary>
+    public TrueFalseNoneEnum BandedColumns { get; set; } = TrueFalseNoneEnum.None;
 }

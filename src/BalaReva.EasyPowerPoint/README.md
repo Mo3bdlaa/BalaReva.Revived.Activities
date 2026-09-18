@@ -9,11 +9,19 @@ has 189 members.
 
 This package targets `net8.0-windows` and requires PowerPoint to be installed.
 
-**It carries no Office interop dependency at all.** PowerPoint's object model is
-saturated with `Microsoft.Office.Core` types, which Microsoft does not publish on NuGet;
-every package that does is a third-party repackage, and depending on one would be the
-supply-chain problem [docs/AUDIT.md](https://github.com/Mo3bdlaa/BalaReva.Revived.Activities/blob/main/docs/AUDIT.md)
-calls out. PowerPoint is driven through its ProgID and late binding instead.
+**PowerPoint is driven late-bound, through its ProgID.** Its object model is saturated
+with `Microsoft.Office.Core` types — `MsoTriState` alone turns up on picture insertion,
+text orientation, shape ordering and the fixed-format export — and Microsoft publishes
+no `Office.dll` on NuGet. The one package that carries it is an Office 2007-era
+third-party repackage with the assembly sitting at the archive root, which is exactly
+the provenance [docs/AUDIT.md](https://github.com/Mo3bdlaa/BalaReva.Revived.Activities/blob/main/docs/AUDIT.md)
+exists to flag. Late binding needs none of it.
+
+`Microsoft.Office.Interop.PowerPoint` is referenced for one thing only, and nothing is
+called through it: the published package exposes the live COM presentation on
+`PowerPointObject.PptPersentation`, and a workflow binding that escape hatch to a
+variable needs the same type. It is the same repackage family already used for the Word
+and Outlook activities here.
 
 PowerPoint access sits behind `IPowerPointService` and `IPowerPointPresentation`, so a
 workflow can register its own implementation as an extension.

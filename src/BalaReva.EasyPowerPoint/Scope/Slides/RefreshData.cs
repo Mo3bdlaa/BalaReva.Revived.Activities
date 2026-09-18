@@ -9,14 +9,14 @@ namespace BalaReva.EasyPowerPoint.Scope.Slides;
 [Description("Refreshes the data behind a slide charts.")]
 public sealed class RefreshData : BaseNativeChild
 {
-    /// <summary>Which slide. Slides are numbered from 1.</summary>
+    /// <summary>Slides to refresh, numbered from 1. Empty means every slide.</summary>
     [RequiredArgument]
     [Category("Input")]
     [DisplayName("Slide Index")]
-    [Description("Which slide. Slides are numbered from 1.")]
-    public InArgument<int> SlideIndex { get; set; } = null!;
+    [Description("Slides to refresh, numbered from 1. Empty means every slide.")]
+    public InArgument<short[]> SlideIndex { get; set; } = null!;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
-        => presentation.RefreshData(SlideIndex.Get(context));
+        => presentation.RefreshData(SlideIndex?.Get(context) ?? []);
 }

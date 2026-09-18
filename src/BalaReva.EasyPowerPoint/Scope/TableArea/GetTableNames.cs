@@ -4,9 +4,9 @@ using BalaReva.EasyPowerPoint.Base;
 
 namespace BalaReva.EasyPowerPoint.Scope.TableArea;
 
-/// <summary>Lists the names of a slide\u0027s tables.</summary>
+/// <summary>Lists the names of a slide's tables.</summary>
 [DisplayName("Get Table Names")]
-[Description("Lists the names of a slide\u0027s tables.")]
+[Description("Lists the names of a slide's tables.")]
 public sealed class GetTableNames : BaseSlideNativeChild
 {
     /// <summary>Names of the table shapes on the slide.</summary>

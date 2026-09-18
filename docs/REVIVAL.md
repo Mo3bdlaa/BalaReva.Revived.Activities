@@ -91,13 +91,40 @@ well covered, but its behaviour against a real mailbox is unverified. The same w
 true of the Office-bound packages still to come, and it is why the COM layer is kept to
 a mechanical translation with every judgement pushed up into the activities.
 
+### Holding the surface
+
+A `.xaml` workflow binds by three things: the type's full name, the property's name, and
+the property's type. Change any one and the workflow breaks on upgrade — silently in the
+designer, loudly at run time. Each package's test suite asserts all three against the
+recorded surface, but those suites are `net8.0-windows`, so they only run on the Windows
+CI job, which is the last place to find out.
+
+`audit/verify_binding_surface.py` does the same comparison from the built `.nupkg`,
+reading metadata only, so it runs on Linux and on a developer machine. It walks every
+public type outside the design assembly, resolves inherited properties up the base
+chain — a property we moved onto a shared base is still the same property to a workflow
+— and reports every name and type that moved. CI runs it on the Linux job right after
+packing.
+
+Building EasyPowerPoint without it cost a red Windows run and 44 differences at once,
+among them four `float` arguments declared as `double`, eleven design-time properties
+declared as `InArgument<T>`, and four published classes never written at all. All of
+them are the kind of thing that looks right in a diff.
+
 ### Why Word and Excel stayed on COM
 
 Checking the four Office-bound packages for COM types in their **binding surfaces**
-settled what each is free to use underneath. Word, Excel and EasyPowerPoint leak none
-at all: every enum is their own, so the implementation is invisible to a workflow.
-EasyExcel leaks exactly one, `SetBorder.LineStyle`, which is an
+settled what each is free to use underneath. Word and Excel leak none at all: every
+enum is their own, so the implementation is invisible to a workflow. EasyExcel leaks
+exactly one on an activity, `SetBorder.LineStyle`, which is an
 `Microsoft.Office.Interop.Excel.XlLineStyle`.
+
+EasyPowerPoint and EasyExcel each leak one more, and not on an activity: the object the
+scope hands its body carries the live COM document — `PowerPointObject.PptPersentation`
+is a `Microsoft.Office.Interop.PowerPoint.Presentation`, `ExcelParam.ExcelWorkBook` a
+`Microsoft.Office.Interop.Excel.Workbook`. An early pass over the surface missed both
+because it read the activities and not the plain classes beside them, which is why the
+check described under *Holding the surface* now walks every public type.
 
 Being free to choose is not the same as being able to, and for both packages done so
 far the activity lists settle it the other way.

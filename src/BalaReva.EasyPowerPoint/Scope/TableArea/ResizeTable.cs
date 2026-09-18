@@ -13,25 +13,25 @@ public sealed class ResizeTable : BaseTableNativeChild
     [Category("Input")]
     [DisplayName("Table Left")]
     [Description("Distance from the left edge of the slide, in points. Zero leaves it alone.")]
-    public InArgument<double> TableLeft { get; set; } = null!;
+    public InArgument<float> TableLeft { get; set; } = null!;
 
     /// <summary>Distance from the top edge of the slide, in points. Zero leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Table Top")]
     [Description("Distance from the top edge of the slide, in points. Zero leaves it alone.")]
-    public InArgument<double> TableTop { get; set; } = null!;
+    public InArgument<float> TableTop { get; set; } = null!;
 
     /// <summary>Width in points. Zero leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Table Width")]
     [Description("Width in points. Zero leaves it alone.")]
-    public InArgument<double> TableWidth { get; set; } = null!;
+    public InArgument<float> TableWidth { get; set; } = null!;
 
     /// <summary>Height in points. Zero leaves it alone.</summary>
     [Category("Input")]
     [DisplayName("Table Height")]
     [Description("Height in points. Zero leaves it alone.")]
-    public InArgument<double> TableHeight { get; set; } = null!;
+    public InArgument<float> TableHeight { get; set; } = null!;
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)

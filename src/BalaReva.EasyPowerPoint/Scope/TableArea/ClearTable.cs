@@ -13,9 +13,9 @@ public sealed class ClearTable : BaseTableNativeChild
     [Category("Input")]
     [DisplayName("Leave First Row")]
     [Description("Leave the first row alone, keeping it as a header.")]
-    public InArgument<bool> LeaveFirstRow { get; set; } = null!;
+    public bool LeaveFirstRow { get; set; }
 
     /// <inheritdoc />
     protected override void ExecuteWork(CodeActivityContext context, IPowerPointPresentation presentation)
-        => presentation.ClearTable(Table(context), LeaveFirstRow?.Get(context) ?? false);
+        => presentation.ClearTable(Table(context), LeaveFirstRow);
 }

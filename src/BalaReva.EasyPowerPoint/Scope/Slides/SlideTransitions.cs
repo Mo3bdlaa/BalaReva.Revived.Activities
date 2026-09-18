@@ -27,7 +27,7 @@ public sealed class SlideTransitions : BaseNativeChild
     [Category("Input")]
     [DisplayName("On Mouse Click")]
     [Description("Advance the slide on a mouse click.")]
-    public InArgument<bool> OnMouseClick { get; set; } = null!;
+    public bool OnMouseClick { get; set; }
 
     /// <summary>How long the transition runs, in seconds. Zero leaves the default.</summary>
     [Category("Input")]
@@ -40,6 +40,6 @@ public sealed class SlideTransitions : BaseNativeChild
         => presentation.SlideTransitions(
             SlideIndex.Get(context),
             EntryEffect,
-            OnMouseClick?.Get(context) ?? false,
+            OnMouseClick,
             Duration?.Get(context) ?? 0);
 }

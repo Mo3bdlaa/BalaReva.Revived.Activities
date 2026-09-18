@@ -5,6 +5,7 @@ using BalaReva.Easy.PowerPoint.Utilities;
 using BalaReva.EasyPowerPoint.Base;
 using BalaReva.EasyPowerPoint.Scope.Main;
 using BalaReva.EasyPowerPoint.Utilities;
+using BalaReva.PowerPoint;
 
 namespace BalaReva.EasyPowerPoint.Tests;
 
@@ -44,6 +45,10 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
 
     public TextStyleRequest? LastFont { get; private set; }
 
+    public TextShape? LastTextShape { get; private set; }
+
+    public bool LastHasHeader { get; private set; }
+
     public TableRef? LastTableRef { get; private set; }
 
     public Exception? Throw { get; set; }
@@ -73,6 +78,9 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
 
     public string FilePath { get; private set; } = string.Empty;
 
+    /// <summary>Always null: there is no COM presentation behind a stand-in.</summary>
+    public object? ComPresentation => null;
+
     public int SlideCount() => Record("SlideCount", Slides);
 
     public void NewSlide(int slideIndex) => Record($"NewSlide({slideIndex})", 0);
@@ -85,8 +93,19 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
 
     public void SlidePaste(int slideIndex) => Record($"SlidePaste({slideIndex})", 0);
 
-    public string SlideExtractor(int slideIndex) =>
-        Record($"SlideExtractor({slideIndex})", $@"C:\out\slide{slideIndex}.pptx");
+    public SlideObject SlideExtractor(int slideIndex) =>
+        Record($"SlideExtractor({slideIndex})", new SlideObject
+        {
+            TextShapes =
+            [
+                new TextShape
+                {
+                    Text = $"slide {slideIndex}",
+                    BoundLeft = 10, BoundTop = 20, BoundWidth = 300, BoundHeight = 40,
+                    TextShapeFont = new ShapeFont { Name = "Calibri", Size = 18, Bold = true },
+                },
+            ],
+        });
 
     public void HideUnhideSlide(int slideIndex, HideUnhideEnum slideShow) =>
         Record($"HideUnhideSlide({slideIndex},{slideShow})", 0);
@@ -101,10 +120,10 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
         Record($"ReadText([{string.Join(",", slideIndexes)}],{addSlideIndex},{omitEmptyLine})",
                (new[] { "one", "two" }, "one\ntwo"));
 
-    public (string[] Array, DataTable Table) FindText(int[] slideIndexes, string find,
+    public (int[] SlideIndexes, DataTable Table) FindText(int[] slideIndexes, string find,
                                                       bool matchCase, bool wholeWord) =>
         Record($"FindText([{string.Join(",", slideIndexes)}],{find},{matchCase},{wholeWord})",
-               (new[] { find }, new DataTable("FindText")));
+               (new[] { 2, 5 }, new DataTable("FindText")));
 
     public void FindReplace(int[] slideIndexes, string find, string replace,
                             bool matchCase, bool wholeWord, bool firstOccurrence) =>
@@ -117,9 +136,9 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
         Record($"InsertTextBox({slideIndex},{request.Text})", 0);
     }
 
-    public void TextShapeEdit(int slideIndex, int textIndex, TextStyleRequest style)
+    public void TextShapeEdit(int slideIndex, int textIndex, TextShape style)
     {
-        LastFont = style;
+        LastTextShape = style;
         Record($"TextShapeEdit({slideIndex},{textIndex})", 0);
     }
 
@@ -160,7 +179,8 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
     public void ChartImageExtract(int slideIndex, string imageFolder, ImageFileFormatEnum format) =>
         Record($"ChartImageExtract({slideIndex},{imageFolder},{format})", 0);
 
-    public void RefreshData(int slideIndex) => Record($"RefreshData({slideIndex})", 0);
+    public void RefreshData(short[] slideIndexes) =>
+        Record($"RefreshData([{string.Join(",", slideIndexes)}])", 0);
 
     public void UpdateLinks() => Record("UpdateLinks", 0);
 
@@ -169,9 +189,9 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
 
     public void CommentsDelete(int slideIndex) => Record($"CommentsDelete({slideIndex})", 0);
 
-    public (string Text, DataTable Table) CommentsRead(int slideIndex, bool includeReplies) =>
+    public (string[] Comments, DataTable Table) CommentsRead(int slideIndex, bool includeReplies) =>
         Record($"CommentsRead({slideIndex},replies={includeReplies})",
-               ("alice: nice", new DataTable("Comments")));
+               (new[] { "alice: nice", "bob: agreed" }, new DataTable("Comments")));
 
     public void AddTable(int slideIndex, AddTableRequest request)
     {
@@ -218,8 +238,12 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
 
     public void TableCopyToClipboard(TableRef table) => Track("TableCopyToClipboard", table);
 
-    public DataSet ExtractTables(int slideIndex) =>
-        Record($"ExtractTables({slideIndex})", new DataSet("SlideTables"));
+    public DataTable[] ExtractTables(int[] slideIndexes, bool hasHeader)
+    {
+        LastHasHeader = hasHeader;
+        return Record($"ExtractTables([{string.Join(",", slideIndexes)}],header={hasHeader})",
+                      new[] { new DataTable("Sales"), new DataTable("Costs") });
+    }
 
     public string[] GetTableNames(int slideIndex) =>
         Record($"GetTableNames({slideIndex})", TableNames);
@@ -240,7 +264,7 @@ public sealed class FakePowerPointService : IPowerPointService, IPowerPointPrese
         Record($"SaveAs({saveAsFile},{format})", 0);
 
     public void Print(int numberOfCopies, PrintColorTypeEnum colorType,
-                      bool printComments, bool printHiddenSlides) =>
+                      TrueFalseNoneEnum printComments, TrueFalseNoneEnum printHiddenSlides) =>
         Record($"Print({numberOfCopies},{colorType},{printComments},{printHiddenSlides})", 0);
 
     public void RemoveDocumentInformation(RemoveDocInfoTypeEnum docInfoType) =>
@@ -308,9 +332,9 @@ internal sealed class ScopeRun
         {
             FilePath = new InArgument<string>(filePath),
             MacroSettings = macros,
-            Body = new ActivityAction<string>
+            Body = new ActivityAction<PowerPointObject>
             {
-                Argument = new DelegateInArgument<string> { Name = "FilePath" },
+                Argument = new DelegateInArgument<PowerPointObject> { Name = "PowerPointPresentation" },
                 Handler = child,
             },
         };
