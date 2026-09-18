@@ -206,25 +206,6 @@ public class ActivityTests
         Assert.ThrowsAny<Exception>(() => Run(activity, service));
     }
 
-    [Fact]
-    public void The_base_runs_on_its_own_because_the_published_package_let_it()
-    {
-        // BaseData is a concrete CodeActivity in the published package, so it appears in
-        // the toolbox and a workflow may have one on a canvas. Running it executes the
-        // command and discards the result.
-        var service = new FakePostgreSqlService();
-
-        Run(
-            new BaseData
-            {
-                ConnectionString = new InArgument<string>("Host=db"),
-                CmdText = new InArgument<string>("vacuum"),
-            },
-            service);
-
-        Assert.Equal("vacuum", Assert.Single(service.Commands).CommandText);
-    }
-
     private static void Run(Activity activity, IPostgreSqlService service)
     {
         var invoker = new WorkflowInvoker(activity);

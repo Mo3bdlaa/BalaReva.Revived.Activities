@@ -24,10 +24,6 @@ it stays one here: a workflow binds by type. Unlike the Office interop assemblie
 is an ordinary maintained NuGet package that resolves cleanly on .NET 8, so there is no
 reason to weaken it.
 
-`BaseData` itself is a concrete `CodeActivity` rather than an abstract base, again as
-published, so it appears in the toolbox in its own right and a workflow may have one on a
-canvas. Running it executes the command and discards the result.
-
 Parameters are cloned into each command before execution. An `NpgsqlParameter` belongs to
 one command once added, so a workflow reusing an array across two activities would
 otherwise hand over an object Npgsql already owns.

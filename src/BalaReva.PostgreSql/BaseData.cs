@@ -7,11 +7,10 @@ namespace BalaReva.PostgreSQL;
 
 /// <summary>Shared arguments for every activity that runs a command.</summary>
 /// <remarks>
-/// The published package declared this as a concrete <c>CodeActivity</c> rather than an
-/// abstract one, so it appears in the toolbox in its own right. That is preserved: a
-/// workflow may well have one on a canvas.
+/// Abstract, as the published package declared it: the three command activities inherit
+/// these arguments, and a workflow binds them on the subclass rather than on this.
 /// </remarks>
-public class BaseData : CodeActivity
+public abstract class BaseData : CodeActivity
 {
     /// <summary>Connection string for the database.</summary>
     [RequiredArgument]
@@ -71,13 +70,9 @@ public class BaseData : CodeActivity
         }
     }
 
-    /// <summary>
-    /// Does the actual work. The base itself runs the command and discards the result,
-    /// which is what a BaseData on a canvas does.
-    /// </summary>
-    protected virtual void ExecuteWork(
-        CodeActivityContext context, IPostgreSqlService service, PostgreSqlCommand command) =>
-        service.ExecuteNonQuery(command);
+    /// <summary>Runs the command and reports whatever the subclass reports.</summary>
+    protected abstract void ExecuteWork(
+        CodeActivityContext context, IPostgreSqlService service, PostgreSqlCommand command);
 
     /// <summary>Gathers the arguments into one command.</summary>
     protected PostgreSqlCommand Command(CodeActivityContext context)

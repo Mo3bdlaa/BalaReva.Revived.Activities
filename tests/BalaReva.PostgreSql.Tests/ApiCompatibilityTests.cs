@@ -27,8 +27,8 @@ public class ApiCompatibilityTests
 
     [Fact]
     public void The_recorded_surface_was_actually_loaded() =>
-        // Three command activities plus BaseData, which the published package declared
-        // concrete rather than abstract.
+        // Three command activities plus the abstract base they share, which the recording
+        // counts too because a workflow binds its arguments.
         Assert.Equal(4, PublishedSurface.Activities(PackageId).Count);
 
     [Fact]
@@ -41,8 +41,8 @@ public class ApiCompatibilityTests
     }
 
     [Fact]
-    public void BaseData_is_usable_on_its_own_as_the_published_package_had_it() =>
-        Assert.False(typeof(BaseData).IsAbstract);
+    public void BaseData_is_abstract_as_the_published_package_declared_it() =>
+        Assert.True(typeof(BaseData).IsAbstract);
 
     [Fact]
     public void The_parameters_argument_keeps_its_Npgsql_type() =>
