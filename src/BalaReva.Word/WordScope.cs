@@ -24,13 +24,21 @@ public sealed class WordScope : BaseNative
         Handler = new Sequence(),
     };
 
-    private Variable<WordScopeHandle> Handle { get; } = new();
+    /// <summary>
+    /// The open document, kept so the scope can close it when the body finishes.
+    /// </summary>
+    /// <remarks>
+    /// Holds the document rather than the <see cref="WordScopeHandle"/> wrapping it:
+    /// WF rejects a <see cref="Variable{T}"/> whose T derives from
+    /// <see cref="System.Activities.Handle"/>.
+    /// </remarks>
+    private Variable<IWordDocument> Opened { get; } = new();
 
     /// <inheritdoc />
     protected override void CacheMetadata(NativeActivityMetadata metadata)
     {
         base.CacheMetadata(metadata);
-        metadata.AddImplementationVariable(Handle);
+        metadata.AddImplementationVariable(Opened);
         if (Body is null) metadata.AddValidationError("Word Scope requires a body.");
     }
 
@@ -49,8 +57,9 @@ public sealed class WordScope : BaseNative
         };
 
         var document = Service(context).Open(target.FilePath, target.Password, target.ModiPassword);
+        Opened.Set(context, document);
+
         var handle = new WordScopeHandle { Document = document };
-        Handle.Set(context, handle);
         context.Properties.Add(handle.ExecutionPropertyName, handle);
 
         if (Body is not null)
@@ -74,8 +83,10 @@ public sealed class WordScope : BaseNative
 
     private void Close(ActivityContext context)
     {
-        var handle = Handle.Get(context);
-        handle?.Document?.Dispose();
-        if (handle is not null) handle.Document = null;
+        var document = Opened.Get(context);
+        if (document is null) return;
+
+        Opened.Set(context, null!);
+        document.Dispose();
     }
 }
