@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Plain net8.0: nothing here touches Windows, so unlike the Office packages this
+         one works in a Studio Cross-platform project, which the original could not. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>BalaReva.Zip</RootNamespace>
+    <AssemblyName>BalaReva.Zip</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.ZipUnzip.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Zip and Unzip Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      Archive activities for UiPath, reimplemented on .NET 8. Type and property names match
+      BalaReva.ZipUnzip.Activities 2020.4.3 so existing workflows keep binding, and the
+      extraction path traversal the old dependencies were vulnerable to is defended
+      directly rather than being left to the library.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <!-- One copy of the path check, shared with the gzip package: it is the security
+         fix these two exist for, so it should not be written twice. -->
+    <Compile Include="../Shared/SafeExtractPath.cs" Link="SafeExtractPath.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <!-- Replaces DotNetZip 1.9.1.8 and Ionic.Zip 1.9.1.8, both abandoned since 2011 and
+         neither able to write an encrypted archive on .NET 8. SharpZipLib 1.2.0 was the
+         third dependency and carried CVE-2021-32840 and CVE-2021-32842; 1.4.2 fixes
+         both. -->
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <!-- Was 0.26.0, which carried CVE-2021-39208 and CVE-2026-44788, both zip-slip
+         variants. -->
+    <PackageReference Include="SharpCompress" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

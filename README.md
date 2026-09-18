@@ -36,10 +36,13 @@ The full evidence, per package and per dependency, is in **[docs/AUDIT.md](docs/
 - **The archive activities carry path-traversal bugs.** `BalaReva.ZipUnzip.Activities`
   pins SharpCompress 0.26.0 (CVE-2021-39208, CVE-2026-44788) alongside DotNetZip/Ionic.Zip
   1.9.1.8 (CVE-2018-1002205), and `BalaReva.ZipUnzipGz.Activities` pins SharpZipLib 1.2.0
-  (CVE-2021-32840, CVE-2021-32842). All are zip-slip variants: a crafted archive writes
-  outside the extraction directory.
+  (CVE-2021-32840, CVE-2021-32842) *and vendors a copy of the vulnerable assembly in
+  `lib/`*, so a consumer gets it whatever NuGet resolves. All are zip-slip variants: a
+  crafted archive writes outside the extraction directory. **Both are reimplemented
+  below.**
 - **`BalaReva.PostgreSql.Activities` pins Npgsql 4.0.7**, inside the affected range for
   CVE-2024-32655 (SQL injection via protocol message size overflow), fixed in 4.0.14.
+  **Reimplemented below.**
 - **Several packages rely on Office COM interop**, which pins them to Windows with a
   matching Office install and rules out cross-platform use regardless of retargeting.
 
@@ -108,6 +111,29 @@ That splits CI in two. Everything builds on Linux via `EnableWindowsTargeting`, 
 `System.Drawing` throws there and a `net8.0-windows` test host needs a runtime Linux does
 not have — so the Linux job builds everything, runs the EasyText suite, packs all eight
 and checks the packages; the Windows job runs all eight suites.
+
+### Then the three that carried advisories
+
+The eight above were picked because .NET 6 went out of support. The next three were
+picked because they are the ones with CVEs, and all three are now reimplemented too:
+
+| Package | Activities | Was | Now | Fixes |
+|---|---:|---|---|---|
+| `BalaReva.ZipUnzip.Activities` | 2 | `lib/` (Legacy only) | `net8.0` | CVE-2021-39208, CVE-2026-44788, CVE-2021-32840, CVE-2021-32842, CVE-2018-1002205 |
+| `BalaReva.ZipUnzipGz.Activities` | 1 | `lib/` (Legacy only) | `net8.0` | CVE-2021-32840, CVE-2021-32842 |
+| `BalaReva.PostgreSql.Activities` | 4 | `lib/` (Legacy only) | `net8.0` | CVE-2024-32655 |
+
+Every one of the archive advisories is the same bug — **zip slip**, an entry named
+`../../etc/passwd` joined to the destination folder without checking where it lands — so
+a version bump is not the whole fix. Both archive packages resolve each destination
+themselves and refuse anything outside the extraction folder, before a byte is written.
+That check is one shared source file, and it is tested with hand-assembled archives that
+genuinely carry those names: a normal writer sanitises them away, so the test builds the
+zip bytes itself. Deleting the check turns 9 of its 11 tests red.
+
+All three also move from `lib/` with no target framework at all — reachable only from a
+Legacy project — to plain `net8.0`, which makes them the first packages here usable from
+a *Cross-platform* project alongside EasyText.
 
 [docs/REVIVAL.md](docs/REVIVAL.md) covers the approach, and records the behavioural
 decisions that metadata could not settle — line numbering chief among them.

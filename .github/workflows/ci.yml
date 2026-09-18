@@ -23,8 +23,16 @@ jobs:
       - name: Build everything
         run: dotnet build BalaReva.Revived.sln -c Release
 
-      - name: Test the cross-platform package
-        run: dotnet test tests/BalaReva.EasyText.Tests/BalaReva.EasyText.Tests.csproj -c Release --no-build
+      # Four of the eleven packages need nothing but the runtime, so their suites run
+      # here as well as on Windows. The archive ones matter most: their whole reason for
+      # existing is a path-traversal fix, and these tests build genuinely hostile archives
+      # to prove it holds.
+      - name: Test the cross-platform packages
+        run: |
+          dotnet test tests/BalaReva.EasyText.Tests/BalaReva.EasyText.Tests.csproj -c Release --no-build
+          dotnet test tests/BalaReva.Zip.Tests/BalaReva.Zip.Tests.csproj -c Release --no-build
+          dotnet test tests/BalaReva.ZipGz.Tests/BalaReva.ZipGz.Tests.csproj -c Release --no-build
+          dotnet test tests/BalaReva.PostgreSql.Tests/BalaReva.PostgreSql.Tests.csproj -c Release --no-build
 
       - name: Pack
         run: |
@@ -36,6 +44,9 @@ jobs:
           dotnet pack src/BalaReva.Excel/BalaReva.Excel.csproj -c Release --no-build -o artifacts
           dotnet pack src/BalaReva.EasyPowerPoint/BalaReva.EasyPowerPoint.csproj -c Release --no-build -o artifacts
           dotnet pack src/BalaReva.EasyExcel/BalaReva.EasyExcel.csproj -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.Zip/BalaReva.Zip.csproj -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.ZipGz/BalaReva.ZipGz.csproj -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.PostgreSql/BalaReva.PostgreSql.csproj -c Release --no-build -o artifacts
 
       # The audit found a published package shipping a .NET Framework assembly out of
       # a net6.0-windows folder. This makes sure we never ship that shape ourselves.
@@ -59,7 +70,9 @@ jobs:
   # The Windows-only packages are only really tested here. EasyImage exercises real
   # GDI+ on real files; Printer and EasyOutlook run their activities against stand-ins,
   # since purging a print queue on a build agent is not something to do for real and no
-  # agent has Outlook installed at all.
+  # agent has Outlook installed at all. This job runs every suite, including the four the
+  # Linux job already ran, because the archive path checks are platform-sensitive: path
+  # comparison is case-insensitive here and case-sensitive there.
   windows:
     runs-on: windows-latest
     steps:

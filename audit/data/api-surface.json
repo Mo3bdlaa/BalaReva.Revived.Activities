@@ -29465,6 +29465,363 @@
       ]
     },
     {
+      "Id": "BalaReva.PostgreSql.Activities",
+      "Types": [
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.BaseData",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "BaseData",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": true,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "CmdText",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "CmdType",
+              "Type": "System.Data.CommandType",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ConnectionString",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ContinueOnError",
+              "Type": "System.Activities.InArgument\u003Cbool\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Delay",
+              "Type": "System.Activities.InArgument\u003Cshort\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Parameters",
+              "Type": "System.Activities.InArgument\u003CNpgsql.NpgsqlParameter[]\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Design.dll",
+          "FullName": "BalaReva.PostgreSql.Design.EmptyDesigner",
+          "Namespace": "BalaReva.PostgreSql.Design",
+          "Name": "EmptyDesigner",
+          "BaseType": "System.Activities.Presentation.ActivityDesigner",
+          "IsAbstract": false,
+          "IsActivity": false,
+          "Properties": [],
+          "Attributes": [],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.ExecuteDataTable",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "ExecuteDataTable",
+          "BaseType": "BalaReva.PostgreSQL.BaseData",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "OutputDataTable",
+              "Type": "System.Activities.OutArgument\u003CSystem.Data.DataTable\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DescriptionAttribute",
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.ExecuteNonQuery",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "ExecuteNonQuery",
+          "BaseType": "BalaReva.PostgreSQL.BaseData",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "ResultValue",
+              "Type": "System.Activities.OutArgument\u003Cint\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DescriptionAttribute",
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.ExecuteScalar",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "ExecuteScalar",
+          "BaseType": "BalaReva.PostgreSQL.BaseData",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "ResultObject",
+              "Type": "System.Activities.OutArgument\u003Cobject\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DescriptionAttribute",
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        }
+      ],
+      "Activities": [
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.BaseData",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "BaseData",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": true,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "CmdText",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "CmdType",
+              "Type": "System.Data.CommandType",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ConnectionString",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ContinueOnError",
+              "Type": "System.Activities.InArgument\u003Cbool\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Delay",
+              "Type": "System.Activities.InArgument\u003Cshort\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Parameters",
+              "Type": "System.Activities.InArgument\u003CNpgsql.NpgsqlParameter[]\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.ExecuteDataTable",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "ExecuteDataTable",
+          "BaseType": "BalaReva.PostgreSQL.BaseData",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "OutputDataTable",
+              "Type": "System.Activities.OutArgument\u003CSystem.Data.DataTable\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DescriptionAttribute",
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.ExecuteNonQuery",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "ExecuteNonQuery",
+          "BaseType": "BalaReva.PostgreSQL.BaseData",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "ResultValue",
+              "Type": "System.Activities.OutArgument\u003Cint\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DescriptionAttribute",
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.PostgreSql.Activities.dll",
+          "FullName": "BalaReva.PostgreSQL.ExecuteScalar",
+          "Namespace": "BalaReva.PostgreSQL",
+          "Name": "ExecuteScalar",
+          "BaseType": "BalaReva.PostgreSQL.BaseData",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "ResultObject",
+              "Type": "System.Activities.OutArgument\u003Cobject\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DescriptionAttribute",
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        }
+      ]
+    },
+    {
       "Id": "BalaReva.Printer.Activities",
       "Types": [
         {
@@ -36149,6 +36506,413 @@
               "PublicSetter": true,
               "Attributes": [
                 "System.ComponentModel.BrowsableAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        }
+      ]
+    },
+    {
+      "Id": "BalaReva.ZipUnzip.Activities",
+      "Types": [
+        {
+          "Assembly": "lib/BalaReva.Zip.Design.dll",
+          "FullName": "BalaReva.Zip.Design.EmptyDesigner",
+          "Namespace": "BalaReva.Zip.Design",
+          "Name": "EmptyDesigner",
+          "BaseType": "System.Activities.Presentation.ActivityDesigner",
+          "IsAbstract": false,
+          "IsActivity": false,
+          "Properties": [],
+          "Attributes": [],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.Zip.Design.dll",
+          "FullName": "BalaReva.Zip.Design.UnZipFileDesign",
+          "Namespace": "BalaReva.Zip.Design",
+          "Name": "UnZipFileDesign",
+          "BaseType": "System.Activities.Presentation.ActivityDesigner",
+          "IsAbstract": false,
+          "IsActivity": false,
+          "Properties": [],
+          "Attributes": [],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.Zip.dll",
+          "FullName": "BalaReva.Zip.EnumExtractType",
+          "Namespace": "BalaReva.Zip",
+          "Name": "EnumExtractType",
+          "BaseType": "System.Enum",
+          "IsAbstract": false,
+          "IsActivity": false,
+          "Properties": [],
+          "Attributes": [],
+          "EnumMembers": [
+            {
+              "Name": "Standard",
+              "Value": 0
+            },
+            {
+              "Name": "UniExtract",
+              "Value": 1
+            }
+          ]
+        },
+        {
+          "Assembly": "lib/BalaReva.Zip.dll",
+          "FullName": "BalaReva.ZipUnzip.UnZipFile",
+          "Namespace": "BalaReva.ZipUnzip",
+          "Name": "UnZipFile",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "CodePage",
+              "Type": "System.Activities.InArgument\u003Cint\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ExtractFolderPath",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ExtractType",
+              "Type": "BalaReva.Zip.EnumExtractType",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Password",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute"
+              ]
+            },
+            {
+              "Name": "strZipFile",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.Zip.dll",
+          "FullName": "BalaReva.ZipUnzip.ZipFilesCls",
+          "Namespace": "BalaReva.ZipUnzip",
+          "Name": "ZipFilesCls",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "FolderFilesPath",
+              "Type": "System.Activities.InArgument\u003Cstring[]\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.BrowsableAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Password",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.BrowsableAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute"
+              ]
+            },
+            {
+              "Name": "ZipFile",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.BrowsableAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        }
+      ],
+      "Activities": [
+        {
+          "Assembly": "lib/BalaReva.Zip.dll",
+          "FullName": "BalaReva.ZipUnzip.UnZipFile",
+          "Namespace": "BalaReva.ZipUnzip",
+          "Name": "UnZipFile",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "CodePage",
+              "Type": "System.Activities.InArgument\u003Cint\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ExtractFolderPath",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ExtractType",
+              "Type": "BalaReva.Zip.EnumExtractType",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Password",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute"
+              ]
+            },
+            {
+              "Name": "strZipFile",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.Zip.dll",
+          "FullName": "BalaReva.ZipUnzip.ZipFilesCls",
+          "Namespace": "BalaReva.ZipUnzip",
+          "Name": "ZipFilesCls",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "FolderFilesPath",
+              "Type": "System.Activities.InArgument\u003Cstring[]\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.BrowsableAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "Password",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.ComponentModel.BrowsableAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute"
+              ]
+            },
+            {
+              "Name": "ZipFile",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.BrowsableAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        }
+      ]
+    },
+    {
+      "Id": "BalaReva.ZipUnzipGz.Activities",
+      "Types": [
+        {
+          "Assembly": "lib/BalaReva.ZipGz.Design.dll",
+          "FullName": "BalaReva.ZipGz.Design.UnZipFileDesign",
+          "Namespace": "BalaReva.ZipGz.Design",
+          "Name": "UnZipFileDesign",
+          "BaseType": "System.Activities.Presentation.ActivityDesigner",
+          "IsAbstract": false,
+          "IsActivity": false,
+          "Properties": [],
+          "Attributes": [],
+          "EnumMembers": []
+        },
+        {
+          "Assembly": "lib/BalaReva.ZipGz.dll",
+          "FullName": "BalaReva.ZipGz.UnZipCls",
+          "Namespace": "BalaReva.ZipGz",
+          "Name": "UnZipCls",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "ExtractFolderPath",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ZipFile",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            }
+          ],
+          "Attributes": [
+            "System.ComponentModel.DesignerAttribute",
+            "System.ComponentModel.DisplayNameAttribute",
+            "System.Drawing.ToolboxBitmapAttribute"
+          ],
+          "EnumMembers": []
+        }
+      ],
+      "Activities": [
+        {
+          "Assembly": "lib/BalaReva.ZipGz.dll",
+          "FullName": "BalaReva.ZipGz.UnZipCls",
+          "Namespace": "BalaReva.ZipGz",
+          "Name": "UnZipCls",
+          "BaseType": "System.Activities.CodeActivity",
+          "IsAbstract": false,
+          "IsActivity": true,
+          "Properties": [
+            {
+              "Name": "ExtractFolderPath",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
+              ]
+            },
+            {
+              "Name": "ZipFile",
+              "Type": "System.Activities.InArgument\u003Cstring\u003E",
+              "PublicGetter": true,
+              "PublicSetter": true,
+              "Attributes": [
+                "System.Activities.RequiredArgumentAttribute",
+                "System.ComponentModel.CategoryAttribute",
+                "System.ComponentModel.DescriptionAttribute",
+                "System.ComponentModel.DisplayNameAttribute"
               ]
             }
           ],
