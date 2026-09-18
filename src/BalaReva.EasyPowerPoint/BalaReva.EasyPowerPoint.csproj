@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- COM, for the same reason as Word and Excel: Print, PasteClipboard,
+         ChartCopyToClipboard, ExecuteMacro, ExportPdf, SaveAs across 39 PowerPoint
+         formats, RefreshData and UpdateLinks all need PowerPoint running. Driven
+         late-bound rather than through an interop assembly; see the note below. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>BalaReva.EasyPowerPoint</RootNamespace>
+    <AssemblyName>BalaReva.Easy.PowerPoint</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.EasyPowerPoint.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Easy PowerPoint Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      PowerPoint activities for UiPath, reimplemented on .NET 8. Type and property names
+      match BalaReva.EasyPowerPoint.Activities 11.0.0 so existing workflows keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <!-- No PowerPoint interop package. Its object model is saturated with
+         Microsoft.Office.Core types - MsoTriState and friends - which Microsoft does
+         not publish on NuGet, and every package that does is a third-party repackage.
+         PowerPointService drives PowerPoint late-bound through its ProgID instead,
+         which needs no interop assembly at all. See docs/REVIVAL.md. -->
+  </ItemGroup>
+
+</Project>

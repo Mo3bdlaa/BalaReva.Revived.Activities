@@ -34,6 +34,7 @@ jobs:
           dotnet pack src/BalaReva.EasyOutlook/BalaReva.EasyOutlook.csproj -c Release --no-build -o artifacts
           dotnet pack src/BalaReva.Word/BalaReva.Word.csproj -c Release --no-build -o artifacts
           dotnet pack src/BalaReva.Excel/BalaReva.Excel.csproj -c Release --no-build -o artifacts
+          dotnet pack src/BalaReva.EasyPowerPoint/BalaReva.EasyPowerPoint.csproj -c Release --no-build -o artifacts
 
       # The audit found a published package shipping a .NET Framework assembly out of
       # a net6.0-windows folder. This makes sure we never ship that shape ourselves.

@@ -34,7 +34,7 @@ support on 2024-11-12. Between them they hold **262 concrete activities**:
 | `BalaReva.EasyOutlook.Activities` | 20 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Excel.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Word.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
-| `BalaReva.EasyPowerPoint.Activities` | 56 | — | Not started |
+| `BalaReva.EasyPowerPoint.Activities` | 56 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
 
 EasyText went first because it is the only one of the eight with no Windows
