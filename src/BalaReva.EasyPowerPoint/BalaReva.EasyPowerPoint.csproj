@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- COM, for the same reason as Word and Excel: Print, PasteClipboard,
+         ChartCopyToClipboard, ExecuteMacro, ExportPdf, SaveAs across 39 PowerPoint
+         formats, RefreshData and UpdateLinks all need PowerPoint running. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>BalaReva.EasyPowerPoint</RootNamespace>
+    <AssemblyName>BalaReva.Easy.PowerPoint</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.EasyPowerPoint.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Easy PowerPoint Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      PowerPoint activities for UiPath, reimplemented on .NET 8. Type and property names
+      match BalaReva.EasyPowerPoint.Activities 11.0.0 so existing workflows keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Office.Interop.PowerPoint" Version="15.0.4420.1018" />
+  </ItemGroup>
+
+</Project>
