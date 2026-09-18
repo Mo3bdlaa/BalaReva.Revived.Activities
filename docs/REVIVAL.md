@@ -33,7 +33,7 @@ support on 2024-11-12. Between them they hold **262 concrete activities**:
 | `BalaReva.Printer.Activities` | 10 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyOutlook.Activities` | 20 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Excel.Activities` | 39 | — | Not started |
-| `BalaReva.Word.Activities` | 39 | — | Not started |
+| `BalaReva.Word.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyPowerPoint.Activities` | 56 | — | Not started |
 | `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
 
@@ -83,12 +83,34 @@ arguments, `ContinueOnError`, output mapping — sits on this side of that bound
 Windows implementation behind it is a thin translation, and is the part that a real
 machine has to vouch for.
 
-**EasyOutlook is the sharpest case of this and deserves stating plainly: no CI agent
-has Outlook installed, so `OutlookService` — the entire COM half of that package — is
-not covered by any automated test.** It compiles, and the activity layer above it is
+**EasyOutlook and Word are the sharpest cases of this and deserve stating plainly: no
+CI agent has Outlook or Word installed, so `OutlookService` and `WordService` — the
+entire COM half of both packages — are not covered by any automated test.** It compiles, and the activity layer above it is
 well covered, but its behaviour against a real mailbox is unverified. The same will be
 true of the Office-bound packages still to come, and it is why the COM layer is kept to
 a mechanical translation with every judgement pushed up into the activities.
+
+### Why Word stayed on COM when Excel and PowerPoint need not
+
+Checking the four Office-bound packages for COM types in their **binding surfaces**
+settled what each is free to use underneath. Word, Excel and EasyPowerPoint leak none
+at all: every enum is their own, so the implementation is invisible to a workflow.
+EasyExcel leaks exactly one, `SetBorder.LineStyle`, which is an
+`Microsoft.Office.Interop.Excel.XlLineStyle`.
+
+Being free to choose is not the same as being able to. Word's activity list settles it
+the other way: `ExecuteMacro`, `Paste`, `CopyTableToClipboard`, `PrintDocument`,
+`WordToPdf`, `SaveAs` across 25 Word formats, `WordStatistics`' page count and
+`CloseAllWord` all need Word running. `DocumentFormat.OpenXml` could serve the table,
+header and reader activities, but a package that worked for two thirds of its own
+activities would be worse than one that is honest about needing Word. So Word is COM,
+behind `IWordService`, with the activity layer tested through a stand-in.
+
+One activity is left deliberately unimplemented behind a clear exception rather than
+quietly doing nothing: `ImageExtract` and `ExtractHeaderFooterImages` round-tripped
+images through the Windows clipboard in the published package, and reproducing that
+would mean pulling WinForms into a document package. The exception says so and points
+here.
 
 ### A note on the Office-bound packages
 
@@ -211,3 +233,23 @@ For EasyOutlook:
   start", since setting the minutes without also setting `ReminderSet` does nothing.
 - **An all-day event ignores the times**, so its end may precede its start on the clock
   without being rejected.
+
+For Word:
+
+- **`Documents.FindAndReplace` is a password change.** Its only two arguments are
+  `NewOpenPassword` and `NewModifyPassword`, which is what `ChangePassword` takes; it
+  looks like a copy that was renamed and shipped. Renaming it here would break any
+  workflow bound to it, so it keeps the name and does what its arguments say. Real find
+  and replace is `Pages.FindReplace`, which has the arguments for it.
+- **`WordObject.ModiPassword`** is spelled that way in the published package, and a
+  workflow binds by property name.
+- **`Delay` is a `double` here**, where the other packages use a `short` or an `int`.
+- **Tables, rows and columns are numbered from 1**, matching Word's own object model
+  rather than the 0-based convention.
+- **`RowHeight` with no indexes means every row**, which is the only reading that makes
+  an empty array useful rather than a silent no-op.
+- **`EnumSelectBoolean` is `Select`=1, `True`=2, `False`=3**, so it cannot be cast to a
+  Word boolean: `Select` would read as true and `False` as a nonzero truth. `WordService`
+  maps it explicitly and leaves the run alone on `Select`.
+- **The scope closes its document even when a child faults**, otherwise a failed run
+  would leave a Word process behind.

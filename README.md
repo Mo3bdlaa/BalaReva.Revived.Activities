@@ -86,7 +86,7 @@ of support. Between them they hold **262 concrete activities**:
 | `BalaReva.Printer.Activities` | 10 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyOutlook.Activities` | 20 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.Excel.Activities` | 39 | — | Not started |
-| `BalaReva.Word.Activities` | 39 | — | Not started |
+| `BalaReva.Word.Activities` | 39 | `net8.0-windows` | ✅ Reimplemented |
 | `BalaReva.EasyPowerPoint.Activities` | 56 | — | Not started |
 | `BalaReva.EasyExcel.Activities` | 77 | — | Not started |
 

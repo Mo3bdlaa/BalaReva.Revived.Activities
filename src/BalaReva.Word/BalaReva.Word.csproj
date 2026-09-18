@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- COM, not OpenXML, and the activity list is why. ExecuteMacro, Paste,
+         CopyTableToClipboard, PrintDocument, WordToPdf, SaveAs across 25 Word formats,
+         WordStatistics' page count and CloseAllWord all need Word itself running.
+         OpenXML could serve the table and header activities, but a package that worked
+         for two thirds of its own activities would be worse than one that is honest
+         about needing Word. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>BalaReva.Word</RootNamespace>
+    <AssemblyName>BalaReva.Word</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BalaReva.Revived.Word.Activities</PackageId>
+    <Version>1.0.0</Version>
+    <Title>BalaReva Revived - Word Activities</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>
+      Word activities for UiPath, reimplemented on .NET 8. Type and property names match
+      BalaReva.Word.Activities 8.0.0 so existing workflows keep binding.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.3" />
+    <!-- Declared, not vendored: the published package copied this DLL into lib/, where
+         no manifest-based scanner can see it. -->
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004" />
+  </ItemGroup>
+
+</Project>
