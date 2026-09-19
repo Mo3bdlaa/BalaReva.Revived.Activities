@@ -62,7 +62,7 @@ public static class Program
         // duplicate every type.
         var entries = archive.Entries
             .Where(e => e.FullName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-            .Where(e => Path.GetFileName(e.FullName).StartsWith("BalaReva", StringComparison.OrdinalIgnoreCase))
+            .Where(e => !IsVendored(Path.GetFileName(e.FullName)))
             .ToList();
         var modern = entries.Where(e => !e.FullName.Contains("/net4", StringComparison.OrdinalIgnoreCase)).ToList();
         foreach (var entry in modern.Count > 0 ? modern : entries)
@@ -86,6 +86,28 @@ public static class Program
             types.OrderBy(t => t.FullName).ToList(),
             types.Where(t => t.IsActivity).OrderBy(t => t.FullName).ToList());
     }
+
+    /// <summary>
+    /// Whether an assembly inside the package is a third-party one the author bundled
+    /// rather than wrote.
+    /// </summary>
+    /// <remarks>
+    /// This used to be an allow list of names starting with "BalaReva", which was wrong
+    /// in a way that failed silently: BalaReva.DataTable.Activities ships its code as
+    /// DataTableExtensions.Activities.dll, so the package was reported as holding zero
+    /// activities rather than as unreadable. Skipping the vendored libraries by name is
+    /// the same intent without the trap - an unrecognised assembly is now read, not
+    /// dropped.
+    /// </remarks>
+    private static bool IsVendored(string fileName) =>
+        VendoredPrefixes.Any(p => fileName.StartsWith(p, StringComparison.OrdinalIgnoreCase));
+
+    private static readonly string[] VendoredPrefixes =
+    [
+        "Microsoft.Office.", "Interop.Microsoft.", "Office.",
+        "ICSharpCode.", "SharpCompress.", "DotNetZip.", "Ionic.",
+        "Npgsql.", "Newtonsoft.", "DocumentFormat.",
+    ];
 
     private static string StripVersion(string fileName)
     {
